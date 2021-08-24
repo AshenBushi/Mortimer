@@ -10,41 +10,41 @@ public class Enemy : MonoBehaviour
     [SerializeField] private int _damage;
     [SerializeField] private float _speed;
     [SerializeField] private int _moneyReward;
+    [SerializeField] private int _experienceReward;
     
     private Player _target;
     private Animator _animator;
-    private Collider _collider;
-    private bool _isRunning = false;
-    private bool _isDied = false;
+    private EnemyState _currentState;
+    private bool _isInit = false;
 
     public int Damage => _damage;
     public int MoneyReward => _moneyReward;
+    public int ExperienceReward => _experienceReward;
 
     public event UnityAction<Enemy> OnEnemyDied;
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
-        _collider = GetComponent<Collider>();
-        _target = FindObjectOfType<Player>();
     }
 
+    public void Init(Player target)
+    {
+        _target = target;
+        _isInit = true;
+    }
+    
     private void Update()
     {
-        if (_isDied) return;
+        if (_currentState == EnemyState.Died || !_isInit) return;
         
         if (Vector3.Distance(_target.transform.position, transform.position) > 2.4f)
         {
             RunToTarget();
         }
         
-        if(_isRunning)
+        if(_currentState == EnemyState.Run)
             Run();
-    }
-
-    private void Start()
-    {
-        RunToTarget();
     }
 
     private void Run()
@@ -53,28 +53,27 @@ public class Enemy : MonoBehaviour
         transform.LookAt(_target.transform);
 
         if (!(Vector3.Distance(_target.transform.position, transform.position) < 2.4)) return;
-        if (_isDied) return;
+        if (_currentState == EnemyState.Died) return;
         AttackTarget();
     }
 
     private void RunToTarget()
     {
         _animator.Play("Run");
-        _isRunning = true;
+        _currentState = EnemyState.Run;
     }
 
     private void AttackTarget()
     {
         _animator.Play("Attack1");
-        _isRunning = false;
+        _currentState = EnemyState.Attack;
     }
 
     private IEnumerator Die()
     {
-        if (_isDied) yield break;
+        if (_currentState == EnemyState.Died) yield break;
         
-        _isDied = true;
-        _isRunning = false;
+        _currentState = EnemyState.Died;
         gameObject.layer = LayerMask.NameToLayer("Dead");
 
         var dieAnimationIndex = Random.Range(1, 5);
@@ -97,4 +96,12 @@ public class Enemy : MonoBehaviour
             StartCoroutine(Die());
         }
     }
+}
+
+public enum EnemyState
+{
+    Idle,
+    Run,
+    Attack,
+    Died
 }

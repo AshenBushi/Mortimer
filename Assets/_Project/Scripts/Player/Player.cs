@@ -7,38 +7,41 @@ using UnityEngine.Events;
 public class Player : MonoBehaviour
 {
     [SerializeField] private EnemySpawner _enemySpawner;
-    [SerializeField] private int _maxHealth;
-    [SerializeField] private int _damage;
     [SerializeField] private AttackSkill _attackSkill;
+    [Space]
+    [SerializeField] private PlayerStats _playerStats;
 
     private Animator _animator;
 
-    public int MaxHealth => _maxHealth;
-    public int Damage => _damage;
-    public int Health { get; private set; }
-    public int Money { get; private set; } = 0;
-
+    public int Money { get; private set; }
+    public PlayerStats PlayerStats => _playerStats;
+    
     public event UnityAction OnHealthChanged;
-    public event UnityAction OnMoneyChanged;
+    public event UnityAction OnExperienceChanged;
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
     }
 
+    public void Init()
+    {
+        _playerStats = new PlayerStats() { MaxHealth = 100, Health = 100, Damage = 5, Experience = 0};
+    }
+    
     private void OnEnable()
     {
-        _enemySpawner.OnEnemyKilled += AddMoney;
+        _enemySpawner.OnEnemyKilled += AddMoneyAndExperience;
     }
     
     private void OnDisable()
     {
-        _enemySpawner.OnEnemyKilled -= AddMoney;
+        _enemySpawner.OnEnemyKilled -= AddMoneyAndExperience;
     }
 
     private void Start()
     {
-        Health = _maxHealth;
+        _playerStats.Health = _playerStats.MaxHealth;
         OnHealthChanged?.Invoke();
     }
 
@@ -47,11 +50,12 @@ public class Player : MonoBehaviour
         
     }
 
-    private void AddMoney(Enemy enemy)
+    private void AddMoneyAndExperience(Enemy enemy)
     {
         Money += enemy.MoneyReward;
+        _playerStats.Experience += enemy.ExperienceReward;
         
-        OnMoneyChanged?.Invoke();
+        OnExperienceChanged?.Invoke();
     }
 
     private IEnumerator UseSkillCoroutine()
@@ -62,14 +66,14 @@ public class Player : MonoBehaviour
 
         Instantiate(_attackSkill, transform);
     }
-    
+
     public void TakeDamage(int damage)
     {
-        Health -= damage;
+        _playerStats.Health -= damage;
 
         OnHealthChanged?.Invoke();
 
-        if (Health <= 0)
+        if (_playerStats.Health <= 0)
         {
             Die();
         }
@@ -94,4 +98,13 @@ public class Player : MonoBehaviour
     {
         Money -= value;
     }
+}
+
+[Serializable]
+public struct PlayerStats
+{
+    public int MaxHealth;
+    public int Health;
+    public int Damage;
+    public int Experience;
 }

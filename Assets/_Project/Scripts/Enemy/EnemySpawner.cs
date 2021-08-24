@@ -7,22 +7,21 @@ using Random = UnityEngine.Random;
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] private Enemy _template;
+    [SerializeField] private Player _player;
     [SerializeField] private int _limitOfEnemyCount;
     [SerializeField] private List<Vector3> _spawnPositions;
     [SerializeField] private float _spawnCooldown;
 
     private List<Enemy> _enemies = new List<Enemy>();
     private float _timeSpend;
+    private bool _inSession = false;
 
     public event UnityAction<Enemy> OnEnemyKilled;
     
-    private void Start()
-    {
-        _timeSpend = _spawnCooldown;
-    }
-
     private void Update()
     {
+        if (!_inSession) return;
+        
         _timeSpend += Time.deltaTime;
 
         if (!(_timeSpend >= _spawnCooldown)) return;
@@ -45,8 +44,25 @@ public class EnemySpawner : MonoBehaviour
         
         var enemy = Instantiate(_template, _spawnPositions[Random.Range(0, _spawnPositions.Count)], Quaternion.identity,
             transform);
+
+        enemy.Init(_player);
         
         _enemies.Add(enemy);
         enemy.OnEnemyDied += OnEnemyDied;
+    }
+
+    public void StartSession()
+    {
+        _inSession = true;
+    }
+
+    public void EndSession()
+    {
+        _inSession = false;
+        
+        foreach (var enemy in _enemies)
+        {
+            Destroy(enemy);
+        }
     }
 }

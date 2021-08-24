@@ -20,20 +20,8 @@ public class Bar : MonoBehaviour
         _bar.value = currentValue;
     }
     
-    protected IEnumerator ChangeBarValue(int value)
+    protected void ChangeBarValue(int value)
     {
-        while (_bar.value - value != 0)
-        {
-            if (_bar.value > value)
-            {
-                _bar.value--;
-            }
-            else
-            {
-                _bar.value++;
-            }
-
-            yield return null;
-        }
+        _bar.value = value;
     }
 }

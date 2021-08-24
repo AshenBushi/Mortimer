@@ -16,11 +16,11 @@ public class HealthBar : Bar
 
     private void Start()
     {
-        SetBarValue(_target.MaxHealth, _target.Health);
+        SetBarValue(_target.PlayerStats.MaxHealth, _target.PlayerStats.Health);
     }
 
     private void OnHealthChanged()
     {
-        StartCoroutine(ChangeBarValue(_target.Health));
+        ChangeBarValue(_target.PlayerStats.Health);
     }
 }

@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class TopPanel : MonoBehaviour
+public class TopPanel : UIPanel
 {
     [SerializeField] private GameObject _pausePanel;
 
