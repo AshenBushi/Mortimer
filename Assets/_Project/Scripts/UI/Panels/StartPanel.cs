@@ -1,14 +1,8 @@
 using UnityEngine;
 
-public class StartScreen : UIPanel
+public class StartPanel : UIPanel
 {
     [SerializeField] private SessionManager _sessionManager;
-    [SerializeField] private MoneyCounter _moneyCounter;
-
-    private void OnEnable()
-    {
-        _moneyCounter.UpdateCounter();
-    }
 
     public void Fight()
     {

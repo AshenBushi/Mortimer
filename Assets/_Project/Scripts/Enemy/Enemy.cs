@@ -38,7 +38,7 @@ public class Enemy : MonoBehaviour
     {
         if (_currentState == EnemyState.Died || !_isInit) return;
         
-        if (Vector3.Distance(_target.transform.position, transform.position) > 2.4f)
+        if (Vector3.Distance(_target.transform.position, transform.position) > 2.5f)
         {
             RunToTarget();
         }

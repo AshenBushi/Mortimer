@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [SerializeField] private Enemy _template;
+    [SerializeField] private List<Enemy> _templates;
     [SerializeField] private Player _player;
     [SerializeField] private int _limitOfEnemyCount;
     [SerializeField] private List<Vector3> _spawnPositions;
@@ -41,8 +41,8 @@ public class EnemySpawner : MonoBehaviour
     private void SpawnEnemy()
     {
         if (_enemies.Count >= _limitOfEnemyCount) return;
-        
-        var enemy = Instantiate(_template, _spawnPositions[Random.Range(0, _spawnPositions.Count)], Quaternion.identity,
+
+        var enemy = Instantiate(_templates[Random.Range(0, _templates.Count)], _spawnPositions[Random.Range(0, _spawnPositions.Count)], Quaternion.identity,
             transform);
 
         enemy.Init(_player);

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class DataManager : Singleton<DataManager>
 {
@@ -34,7 +35,8 @@ public class DataManager : Singleton<DataManager>
     }
 }
 
+[Serializable]
 public class Data
 {
-    public PlayerStats PlayerStats;
+    public int Money;
 }

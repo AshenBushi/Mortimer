@@ -12,8 +12,7 @@ public class Player : MonoBehaviour
     [SerializeField] private PlayerStats _playerStats;
 
     private Animator _animator;
-
-    public int Money { get; private set; }
+    
     public PlayerStats PlayerStats => _playerStats;
     
     public event UnityAction OnHealthChanged;
@@ -31,12 +30,12 @@ public class Player : MonoBehaviour
     
     private void OnEnable()
     {
-        _enemySpawner.OnEnemyKilled += AddMoneyAndExperience;
+        _enemySpawner.OnEnemyKilled += OnEnemyKilled;
     }
     
     private void OnDisable()
     {
-        _enemySpawner.OnEnemyKilled -= AddMoneyAndExperience;
+        _enemySpawner.OnEnemyKilled -= OnEnemyKilled;
     }
 
     private void Start()
@@ -50,9 +49,10 @@ public class Player : MonoBehaviour
         
     }
 
-    private void AddMoneyAndExperience(Enemy enemy)
+    private void OnEnemyKilled(Enemy enemy)
     {
-        Money += enemy.MoneyReward;
+        User.Instance.AddMoney(enemy.MoneyReward);
+        
         _playerStats.Experience += enemy.ExperienceReward;
         
         OnExperienceChanged?.Invoke();
@@ -92,11 +92,6 @@ public class Player : MonoBehaviour
     public void UseSkill()
     {
         StartCoroutine(UseSkillCoroutine());
-    }
-
-    public void SpendMoney(int value)
-    {
-        Money -= value;
     }
 }
 
