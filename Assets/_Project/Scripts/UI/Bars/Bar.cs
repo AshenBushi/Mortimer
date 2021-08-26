@@ -14,14 +14,14 @@ public class Bar : MonoBehaviour
         _bar = GetComponent<Slider>();
     }
 
-    protected void SetBarValue(int maxValue, int currentValue)
+    protected virtual void ChangeBarValue(int value)
+    {
+        _bar.value = value;
+    }
+    
+    public virtual void SetBarValue(int maxValue, int currentValue)
     {
         _bar.maxValue = maxValue;
         _bar.value = currentValue;
-    }
-    
-    protected void ChangeBarValue(int value)
-    {
-        _bar.value = value;
     }
 }

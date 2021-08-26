@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -39,4 +40,11 @@ public class DataManager : Singleton<DataManager>
 public class Data
 {
     public int Money;
+    public List<int> PerksLevels;
+
+    public Data()
+    {
+        Money = 0;
+        PerksLevels = new List<int>() { 0, 0, 0, 0, 0 };
+    }
 }

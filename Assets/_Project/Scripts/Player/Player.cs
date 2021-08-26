@@ -6,6 +6,9 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Animator))]
 public class Player : MonoBehaviour
 {
+    private const int DefaultMaxHealth = 200;
+    private const int DefaultDamage = 10;
+    
     [SerializeField] private EnemySpawner _enemySpawner;
     [SerializeField] private AttackSkill _attackSkill;
     [Space]
@@ -25,7 +28,9 @@ public class Player : MonoBehaviour
 
     public void Init()
     {
-        _playerStats = new PlayerStats() { MaxHealth = 100, Health = 100, Damage = 5, Experience = 0};
+        _playerStats = new PlayerStats(DefaultMaxHealth * PerksHandler.Instance.GetPerkBoost(PerksName.Health),
+            DefaultDamage * PerksHandler.Instance.GetPerkBoost(PerksName.Damage));
+        OnHealthChanged?.Invoke();
     }
     
     private void OnEnable()
@@ -38,12 +43,6 @@ public class Player : MonoBehaviour
         _enemySpawner.OnEnemyKilled -= OnEnemyKilled;
     }
 
-    private void Start()
-    {
-        _playerStats.Health = _playerStats.MaxHealth;
-        OnHealthChanged?.Invoke();
-    }
-
     private void Die()
     {
         
@@ -51,11 +50,7 @@ public class Player : MonoBehaviour
 
     private void OnEnemyKilled(Enemy enemy)
     {
-        User.Instance.AddMoney(enemy.MoneyReward);
-        
-        _playerStats.Experience += enemy.ExperienceReward;
-        
-        OnExperienceChanged?.Invoke();
+        User.Instance.AddMoney((int)(enemy.MoneyReward * PerksHandler.Instance.GetPerkBoost(PerksName.Income)));
     }
 
     private IEnumerator UseSkillCoroutine()
@@ -101,5 +96,11 @@ public struct PlayerStats
     public int MaxHealth;
     public int Health;
     public int Damage;
-    public int Experience;
+
+    public PlayerStats(float maxHealth, float damage)
+    {
+        MaxHealth = (int)maxHealth;
+        Health = MaxHealth;
+        Damage = (int)damage;
+    }
 }

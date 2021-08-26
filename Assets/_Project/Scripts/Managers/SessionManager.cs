@@ -23,6 +23,7 @@ public class SessionManager : Singleton<SessionManager>
         _topPanel.Enable();
         _enemySpawner.StartSession();
         _player.Init();
+        SkillsHandler.Instance.Init();
     }
 
     public void EndSession()

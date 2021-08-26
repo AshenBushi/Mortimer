@@ -2,25 +2,20 @@ using UnityEngine;
 
 public class ExperienceBar : Bar
 {
-    [SerializeField] private Player _player;
+    [SerializeField] private SkillsHandler _skillsHandler;
 
     private void OnEnable()
     {
-        _player.OnExperienceChanged += OnExperienceChanged;
+        _skillsHandler.OnExperienceChanged += OnExperienceChanged;
     }
     
     private void OnDisable()
     {
-        _player.OnExperienceChanged -= OnExperienceChanged;
-    }
-
-    private void Start()
-    {
-        SetBarValue(100, _player.PlayerStats.Experience);
+        _skillsHandler.OnExperienceChanged -= OnExperienceChanged;
     }
 
     private void OnExperienceChanged()
     {
-        ChangeBarValue(_player.PlayerStats.Experience);
+        ChangeBarValue(_skillsHandler.CurrentExperience);
     }
 }

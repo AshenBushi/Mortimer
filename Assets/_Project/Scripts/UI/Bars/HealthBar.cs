@@ -1,8 +1,10 @@
+using TMPro;
 using UnityEngine;
 
 public class HealthBar : Bar
 {
     [SerializeField] private Player _target;
+    [SerializeField] private TMP_Text _text;
 
     private void OnEnable()
     {
@@ -22,5 +24,17 @@ public class HealthBar : Bar
     private void OnHealthChanged()
     {
         ChangeBarValue(_target.PlayerStats.Health);
+    }
+
+    protected override void ChangeBarValue(int value)
+    {
+        base.ChangeBarValue(value);
+        _text.text = value.ToString();
+    }
+    
+    public override void SetBarValue(int maxValue, int currentValue)
+    {
+        base.SetBarValue(maxValue, currentValue);
+        _text.text = currentValue.ToString();
     }
 }

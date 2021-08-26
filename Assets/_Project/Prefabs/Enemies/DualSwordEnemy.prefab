@@ -470,7 +470,7 @@ MonoBehaviour:
   _health: 10
   _damage: 1
   _speed: 5
-  _moneyReward: 10
+  _moneyReward: 5
   _experienceReward: 5
 --- !u!1 &4518811115461180076
 GameObject:
