@@ -14,18 +14,21 @@ public class Enemy : MonoBehaviour
     
     private Player _target;
     private Animator _animator;
+    private Collider _collider;
     private EnemyState _currentState;
     private bool _isInit = false;
 
     public int Damage => _damage;
     public int MoneyReward => _moneyReward;
     public int ExperienceReward => _experienceReward;
+    public EnemyState CurrentState => _currentState;
 
     public event UnityAction<Enemy> OnEnemyDied;
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
+        _collider = GetComponent<Collider>();
     }
 
     public void Init(Player target)

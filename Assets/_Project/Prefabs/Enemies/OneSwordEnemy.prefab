@@ -1692,7 +1692,7 @@ MonoBehaviour:
   _damage: 2
   _speed: 5
   _moneyReward: 5
-  _experienceReward: 5
+  _experienceReward: 50
 --- !u!1 &8397669675712245757
 GameObject:
   m_ObjectHideFlags: 0

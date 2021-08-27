@@ -4,7 +4,7 @@ public class SessionManager : Singleton<SessionManager>
 {
     [SerializeField] private Player _player;
     [SerializeField] private EnemySpawner _enemySpawner;
-    [SerializeField] private TopPanel _topPanel;
+    [SerializeField] private GameScreen _gameScreen;
     
     protected override void Awake()
     {
@@ -20,7 +20,7 @@ public class SessionManager : Singleton<SessionManager>
 
     public void StartSession()
     {
-        _topPanel.Enable();
+        _gameScreen.Enable();
         _enemySpawner.StartSession();
         _player.Init();
         SkillsHandler.Instance.Init();
@@ -28,7 +28,7 @@ public class SessionManager : Singleton<SessionManager>
 
     public void EndSession()
     {
-        _topPanel.Disable();
+        _gameScreen.Disable();
         _enemySpawner.EndSession();
     }
 }

@@ -39,13 +39,13 @@ public class PerksHandler : Singleton<PerksHandler>
         }
     }
     
-    public float GetPerkBoost(PerksName name)
+    public float GetPerkBoost(PerkName name)
     {
         return _perks[(int)name].CurrentBoost;
     }
 }
 
-public enum PerksName
+public enum PerkName
 {
     Health,
     Damage,

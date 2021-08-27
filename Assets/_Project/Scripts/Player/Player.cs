@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(Animator))]
 public class Player : MonoBehaviour
@@ -10,26 +11,17 @@ public class Player : MonoBehaviour
     private const int DefaultDamage = 10;
     
     [SerializeField] private EnemySpawner _enemySpawner;
-    [SerializeField] private AttackSkill _attackSkill;
     [Space]
     [SerializeField] private PlayerStats _playerStats;
-
-    private Animator _animator;
     
     public PlayerStats PlayerStats => _playerStats;
-    
     public event UnityAction OnHealthChanged;
-    public event UnityAction OnExperienceChanged;
-
-    private void Awake()
-    {
-        _animator = GetComponent<Animator>();
-    }
 
     public void Init()
     {
-        _playerStats = new PlayerStats(DefaultMaxHealth * PerksHandler.Instance.GetPerkBoost(PerksName.Health),
-            DefaultDamage * PerksHandler.Instance.GetPerkBoost(PerksName.Damage));
+        _playerStats = new PlayerStats(DefaultMaxHealth * PerksHandler.Instance.GetPerkBoost(PerkName.Health),
+            DefaultDamage * PerksHandler.Instance.GetPerkBoost(PerkName.Damage));
+        
         OnHealthChanged?.Invoke();
     }
     
@@ -50,20 +42,18 @@ public class Player : MonoBehaviour
 
     private void OnEnemyKilled(Enemy enemy)
     {
-        User.Instance.AddMoney((int)(enemy.MoneyReward * PerksHandler.Instance.GetPerkBoost(PerksName.Income)));
-    }
-
-    private IEnumerator UseSkillCoroutine()
-    {
-        _animator.Play("Skill1");
-
-        yield return new WaitForSeconds(0.66f);
-
-        Instantiate(_attackSkill, transform);
+        User.Instance.AddMoney((int)(enemy.MoneyReward * PerksHandler.Instance.GetPerkBoost(PerkName.Income)));
     }
 
     public void TakeDamage(int damage)
     {
+        if (_playerStats.DodgeChance > 0)
+        {
+            var randomValue = Random.Range(1, 101);
+            
+            if(randomValue <= _playerStats.DodgeChance) return;
+        }
+        
         _playerStats.Health -= damage;
 
         OnHealthChanged?.Invoke();
@@ -74,19 +64,27 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void Attack()
+    public void IncreaseHealth(int value)
     {
-        _animator.Play("Attack1");
+        _playerStats.MaxHealth += value;
+        _playerStats.Health += value;
+        
+        OnHealthChanged?.Invoke();
     }
 
-    public void Idle()
+    public void IncreaseDamage(int value)
     {
-        _animator.Play("Idle");
+        _playerStats.Damage += value;
     }
 
-    public void UseSkill()
+    public void SetAttackSpeed(float value)
     {
-        StartCoroutine(UseSkillCoroutine());
+        _playerStats.AttackSpeed = value;
+    }
+
+    public void SetDodgeChance(int value)
+    {
+        _playerStats.DodgeChance = value;
     }
 }
 
@@ -96,11 +94,15 @@ public struct PlayerStats
     public int MaxHealth;
     public int Health;
     public int Damage;
+    public float AttackSpeed;
+    public int DodgeChance;
 
     public PlayerStats(float maxHealth, float damage)
     {
         MaxHealth = (int)maxHealth;
         Health = MaxHealth;
         Damage = (int)damage;
+        AttackSpeed = 1;
+        DodgeChance = 0;
     }
 }

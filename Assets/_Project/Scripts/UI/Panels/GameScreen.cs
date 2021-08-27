@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TopPanel : UIPanel
+public class GameScreen : UIPanel
 {
     [SerializeField] private GameObject _pausePanel;
 

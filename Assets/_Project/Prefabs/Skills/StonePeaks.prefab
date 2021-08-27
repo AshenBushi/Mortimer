@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4698677275724918387}
   - component: {fileID: 4698677275724918385}
   m_Layer: 0
-  m_Name: EarthSpike
+  m_Name: StonePeaks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

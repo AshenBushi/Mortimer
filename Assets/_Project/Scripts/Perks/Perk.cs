@@ -51,6 +51,9 @@ public class Perk : MonoBehaviour
 
     private void CheckSolvency()
     {
+        if (_currentLevel == _prices.Count - 1)
+            _isMaxLevel = true;
+         
         if (_isMaxLevel)
         {
             _button.interactable = false;
@@ -79,10 +82,7 @@ public class Perk : MonoBehaviour
     public void Upgrade()
     {
         _currentLevel++;
-        
-        if (_currentLevel == _prices.Count - 1)
-            _isMaxLevel = true;
-        
+
         User.Instance.SpendMoney(_prices[_currentLevel]);
 
         SetIcon();
