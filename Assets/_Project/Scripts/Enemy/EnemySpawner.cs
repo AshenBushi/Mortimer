@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.Events;
 using Random = UnityEngine.Random;
@@ -9,10 +10,15 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private List<Enemy> _templates;
     [SerializeField] private Player _player;
     [SerializeField] private int _limitOfEnemyCount;
-    [SerializeField] private List<Vector3> _spawnPositions;
+    [SerializeField] private List<Transform> _spawnPositions;
     [SerializeField] private float _spawnCooldown;
+    [Space]
+    [SerializeField] private List<Wave> _waves;
 
     private List<Enemy> _enemies = new List<Enemy>();
+
+    private int _currentWave = 0;
+    private int _enemiesSpawned = 0;
     private float _timeSpend;
     private bool _inSession = false;
 
@@ -37,17 +43,54 @@ public class EnemySpawner : MonoBehaviour
         
         OnEnemyKilled?.Invoke(enemy);
     }
+
+    private int GetEnemyType(Wave wave)
+    {
+        var randomValue = Random.Range(1, 101);
+
+        if (randomValue <= wave.OneHanded.Chance)
+        {
+            return 0;
+        }
+        
+        return randomValue <= wave.OneHanded.Chance + wave.TwoHanded.Chance ? 1 : 2;
+    }
     
     private void SpawnEnemy()
     {
         if (_enemies.Count >= _limitOfEnemyCount) return;
 
-        var enemy = Instantiate(_templates[Random.Range(0, _templates.Count)], _spawnPositions[Random.Range(0, _spawnPositions.Count)], Quaternion.identity,
+        if (_enemiesSpawned == 20)
+        {
+            if (_currentWave != _waves.Count - 1)
+            {
+                _currentWave++;
+            }
+
+            _enemiesSpawned = 0;
+        }
+
+        var enemyType = GetEnemyType(_waves[_currentWave]);
+        
+        var enemy = Instantiate(_templates[enemyType], _spawnPositions[Random.Range(0, _spawnPositions.Count)].position, Quaternion.identity,
             transform);
 
-        enemy.Init(_player);
+        switch (enemyType)
+        {
+            case 0 :
+                enemy.Init(_player, _waves[_currentWave].OneHanded);
+                break;
+            case 1 :
+                enemy.Init(_player, _waves[_currentWave].TwoHanded);
+                break;
+            case 2 :
+                enemy.Init(_player, _waves[_currentWave].Shield);
+                break;
+        }
         
         _enemies.Add(enemy);
+        _enemiesSpawned++;
+        
         enemy.OnEnemyDied += OnEnemyDied;
     }
 
@@ -62,14 +105,15 @@ public class EnemySpawner : MonoBehaviour
         
         foreach (var enemy in _enemies)
         {
-            Destroy(enemy);
+            enemy.Celebrate();
         }
     }
 }
 
+[Serializable]
 public class Wave
 {
-    public EnemyStats _oneHanded;
-    public EnemyStats _towHanded;
-    public EnemyStats _shield;
+    public EnemyStats OneHanded;
+    public EnemyStats TwoHanded;
+    public EnemyStats Shield;
 }

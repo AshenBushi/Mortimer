@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     [Space]
     [SerializeField] private PlayerStats _playerStats;
 
+    private Animator _animator;
     private UltimateShield _ultimateShield;
 
     public PlayerStats PlayerStats => _playerStats;
@@ -22,6 +23,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         _ultimateShield = GetComponentInChildren<UltimateShield>();
+        _animator = GetComponent<Animator>();
     }
 
     public void Init()
@@ -44,7 +46,8 @@ public class Player : MonoBehaviour
 
     private void Die()
     {
-        
+        _animator.SetTrigger("Died");
+        SessionManager.Instance.EndSession();
     }
 
     private void OnEnemyKilled(Enemy enemy)

@@ -7,18 +7,6 @@ public class PerksHandler : Singleton<PerksHandler>
 {
     [SerializeField] private List<Perk> _perks;
 
-    protected override void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
     private void Start()
     {
         InitPerks();

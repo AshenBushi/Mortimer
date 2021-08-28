@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class PlayerAttackHandler : MonoBehaviour
 {
-    private const float DefaultAttackCooldown = 1.5f;
+    private const float DefaultAttackCooldown = 1.25f;
     
     [SerializeField] private StonePeaks _stonePeaks;
     

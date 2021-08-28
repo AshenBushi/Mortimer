@@ -41,18 +41,6 @@ public class SkillsHandler : Singleton<SkillsHandler>
     public int CurrentExperience { get; private set; } = 0;
     public List<int> SkillsLevels => _skillsLevels;
     public event UnityAction OnExperienceChanged;
-    
-    protected override void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
 
     public void Init()
     {

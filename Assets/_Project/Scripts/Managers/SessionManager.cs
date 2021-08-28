@@ -5,18 +5,8 @@ public class SessionManager : Singleton<SessionManager>
     [SerializeField] private Player _player;
     [SerializeField] private EnemySpawner _enemySpawner;
     [SerializeField] private GameScreen _gameScreen;
-    
-    protected override void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
+    [SerializeField] private GameObject _moneyCounter;
+    [SerializeField] private LoseScreen _loseScreen;
 
     public void StartSession()
     {
@@ -30,5 +20,7 @@ public class SessionManager : Singleton<SessionManager>
     {
         _gameScreen.Disable();
         _enemySpawner.EndSession();
+        _moneyCounter.SetActive(false);
+        _loseScreen.Enable();
     }
 }

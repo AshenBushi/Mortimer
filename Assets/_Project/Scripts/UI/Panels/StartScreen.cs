@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class StartPanel : UIPanel
+public class StartScreen : UIPanel
 {
     [SerializeField] private SessionManager _sessionManager;
 

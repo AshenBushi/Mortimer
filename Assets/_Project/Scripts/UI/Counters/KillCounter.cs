@@ -8,6 +8,8 @@ public class KillCounter : MonoBehaviour
     private TMP_Text _text;
     private int _killCount = -1;
 
+    public int KillCount => _killCount;
+
     private void Awake()
     {
         _text = GetComponentInChildren<TMP_Text>();

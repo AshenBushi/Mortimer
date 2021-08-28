@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -32,9 +33,13 @@ public class Enemy : MonoBehaviour
         _collider = GetComponent<Collider>();
     }
 
-    public void Init(Player target)
+    public void Init(Player target, EnemyStats stats)
     {
         _target = target;
+        _health = stats.Health;
+        _damage = stats.Damage;
+        _moneyReward = stats.MoneyReward;
+        _experienceReward = stats.Experience;
         _isInit = true;
         _attackSpeed = 1f;
     }
@@ -109,14 +114,22 @@ public class Enemy : MonoBehaviour
     {
         _attackSpeed = value;
     }
+
+    public void Celebrate()
+    {
+        _isInit = false;
+        _animator.Play("Idle");
+    }
 }
 
+[Serializable]
 public struct EnemyStats
 {
-    public int Health;
-    public int Damage;
+    public int Chance;
     public int Experience;
     public int MoneyReward;
+    public int Damage;
+    public int Health;
 }
 
 public enum EnemyState

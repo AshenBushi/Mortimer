@@ -6,7 +6,8 @@ public class EnemyWeapon : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out Player player))
+        if (!other.TryGetComponent(out Player player)) return;
+        if (_enemy.CurrentState == EnemyState.Attack)
         {
             player.TakeDamage(_enemy.Damage);
         }
