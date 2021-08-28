@@ -21,7 +21,6 @@ public class SkillUI : MonoBehaviour
         _skillName = skillName;
         _name.text = _names[(int)skillName];
         _icon.sprite = _icons[(int)skillName];
-        _icon.SetNativeSize();
         _buttonBackground.sprite = _buttonBackgrounds[SkillsHandler.Instance.SkillsLevels[(int)_skillName]];
     }
 

@@ -63,15 +63,15 @@ MonoBehaviour:
   - Fire Aura
   - Ice Aura
   _icons:
-  - {fileID: 21300000, guid: 8820f2404b85e4c059bb1aff048a3309, type: 3}
-  - {fileID: 21300000, guid: 169d45648e00348038299fc345aa6b4f, type: 3}
-  - {fileID: 21300000, guid: 2a395c4f5dd914dd2b50468e92772309, type: 3}
-  - {fileID: 21300000, guid: 9ed76373c3aae4e949cd7feccd939007, type: 3}
-  - {fileID: 21300000, guid: 768bd451ab2124c98924895f104d3dce, type: 3}
-  - {fileID: 21300000, guid: e35fc472b6ada425894eef3b044e099f, type: 3}
-  - {fileID: 21300000, guid: b3d8dbe835c404179842f9f9595f2bf0, type: 3}
-  - {fileID: 21300000, guid: 3c6f5b7a54bd84489ba7d655c5b7b812, type: 3}
-  - {fileID: 21300000, guid: 9f57a8adac99e4526a1986646a3be29a, type: 3}
+  - {fileID: -5505784301242206033, guid: 712eca81da252bc44b37ff91b6cacd27, type: 3}
+  - {fileID: 7119002349883303594, guid: 712eca81da252bc44b37ff91b6cacd27, type: 3}
+  - {fileID: -6246062721824389004, guid: 712eca81da252bc44b37ff91b6cacd27, type: 3}
+  - {fileID: -6712684000001025906, guid: 712eca81da252bc44b37ff91b6cacd27, type: 3}
+  - {fileID: 8685077388864575728, guid: 712eca81da252bc44b37ff91b6cacd27, type: 3}
+  - {fileID: 1430504741990559472, guid: 712eca81da252bc44b37ff91b6cacd27, type: 3}
+  - {fileID: 3672223182082440460, guid: 712eca81da252bc44b37ff91b6cacd27, type: 3}
+  - {fileID: -1140953881901911216, guid: 712eca81da252bc44b37ff91b6cacd27, type: 3}
+  - {fileID: 1752313724658198474, guid: 712eca81da252bc44b37ff91b6cacd27, type: 3}
   _buttonBackgrounds:
   - {fileID: 21300000, guid: dd77367546bf4433dbbb2317a935df54, type: 3}
   - {fileID: 21300000, guid: 35d7e6588f1f34db1b9a5e62f4efdf77, type: 3}
@@ -157,7 +157,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 200}
+  m_SizeDelta: {x: 250, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2457079366143284303
 CanvasRenderer:
@@ -187,7 +187,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9ed76373c3aae4e949cd7feccd939007, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3a21cf114de9c3845b89852548d76c04, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -264,7 +264,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 35d7e6588f1f34db1b9a5e62f4efdf77, type: 3}
+  m_Sprite: {fileID: 21300000, guid: dd77367546bf4433dbbb2317a935df54, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

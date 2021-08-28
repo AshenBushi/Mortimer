@@ -66,3 +66,10 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 }
+
+public class Wave
+{
+    public EnemyStats _oneHanded;
+    public EnemyStats _towHanded;
+    public EnemyStats _shield;
+}

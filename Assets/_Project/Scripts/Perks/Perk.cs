@@ -31,6 +31,7 @@ public class Perk : MonoBehaviour
         _currentLevel = level;
         SetIcon();
         CheckSolvency();
+        User.Instance.OnMoneyChanged += CheckSolvency;
     }
 
     private void OnEnable()
@@ -44,16 +45,11 @@ public class Perk : MonoBehaviour
         User.Instance.OnMoneyChanged -= CheckSolvency;
     }
 
-    private void Start()
-    {
-        User.Instance.OnMoneyChanged += CheckSolvency;
-    }
-
     private void CheckSolvency()
     {
         if (_currentLevel == _prices.Count - 1)
             _isMaxLevel = true;
-         
+
         if (_isMaxLevel)
         {
             _button.interactable = false;

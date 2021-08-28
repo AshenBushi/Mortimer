@@ -17,7 +17,8 @@ public class Enemy : MonoBehaviour
     private Collider _collider;
     private EnemyState _currentState;
     private bool _isInit = false;
-
+    private float _attackSpeed;
+    
     public int Damage => _damage;
     public int MoneyReward => _moneyReward;
     public int ExperienceReward => _experienceReward;
@@ -35,6 +36,7 @@ public class Enemy : MonoBehaviour
     {
         _target = target;
         _isInit = true;
+        _attackSpeed = 1f;
     }
     
     private void Update()
@@ -62,12 +64,14 @@ public class Enemy : MonoBehaviour
 
     private void RunToTarget()
     {
+        _animator.speed = 1;
         _animator.Play("Run");
         _currentState = EnemyState.Run;
     }
 
     private void AttackTarget()
     {
+        _animator.speed = _attackSpeed;
         _animator.Play("Attack1");
         _currentState = EnemyState.Attack;
     }
@@ -76,13 +80,14 @@ public class Enemy : MonoBehaviour
     {
         if (_currentState == EnemyState.Died) yield break;
         
+        var dieAnimationIndex = Random.Range(1, 5);
+
+        _animator.speed = 1;
+        _animator.Play("Die" + dieAnimationIndex);
+        
         _currentState = EnemyState.Died;
         gameObject.layer = LayerMask.NameToLayer("Dead");
 
-        var dieAnimationIndex = Random.Range(1, 5);
-        
-        _animator.Play("Die" + dieAnimationIndex);
-        
         OnEnemyDied?.Invoke(this);
         
         yield return new WaitForSeconds(1f);
@@ -99,6 +104,19 @@ public class Enemy : MonoBehaviour
             StartCoroutine(Die());
         }
     }
+
+    public void SetAttackSpeed(float value)
+    {
+        _attackSpeed = value;
+    }
+}
+
+public struct EnemyStats
+{
+    public int Health;
+    public int Damage;
+    public int Experience;
+    public int MoneyReward;
 }
 
 public enum EnemyState

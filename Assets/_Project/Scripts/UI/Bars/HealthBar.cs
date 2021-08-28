@@ -23,7 +23,7 @@ public class HealthBar : Bar
 
     private void OnHealthChanged()
     {
-        ChangeBarValue(_target.PlayerStats.Health);
+        SetBarValue(_target.PlayerStats.MaxHealth, _target.PlayerStats.Health);
     }
 
     protected override void ChangeBarValue(int value)

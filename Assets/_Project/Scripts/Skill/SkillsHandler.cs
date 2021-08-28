@@ -17,12 +17,22 @@ public class SkillsHandler : Singleton<SkillsHandler>
     [SerializeField] private PlayerAttackHandler _playerAttackHandler;
     [SerializeField] private ExperienceBar _experienceBar;
     [SerializeField] private SkillPanel _skillPanel;
+    [Header("Active Skills")]
+    [SerializeField] private List<ActiveSkill> _activeSkills;
+    [SerializeField] private DoubleDamage _doubleDamage;
+    [SerializeField] private UltimateShield _ultimateShield;
+    [Header("Auras")]
+    [SerializeField] private FireAura _fireAura;
+    [SerializeField] private IceAura _iceAura;
+    [Header("Lists")]
     [SerializeField] private List<int> _skillsLevels;
+    [SerializeField] private List<SkillBuffs> _skillsBuffs;
+    [Header("Skills Type")]
     [SerializeField] private List<SkillName> _commonSkills;
     [SerializeField] private List<SkillName> _rareSkills;
     [SerializeField] private List<SkillName> _mythicalSkills;
     [SerializeField] private List<SkillName> _legendarySkills;
-    [SerializeField] private List<SkillBuffs> _skillsBuffs;
+    
 
 
     private int _currentLevel = 1;
@@ -156,17 +166,37 @@ public class SkillsHandler : Singleton<SkillsHandler>
                 _playerAttackHandler.DecreaseCooldown(_skillsBuffs[(int)skillName].Buffs[level]);
                 break;
             case SkillName.StonePeaks:
+                if(!_activeSkills[0].IsActive)
+                    _activeSkills[0].Enable();
+                
+                _activeSkills[0].SetCooldown((int)_skillsBuffs[(int)skillName].Buffs[level]);
                 break;
             case SkillName.Dodge:
                 _player.SetDodgeChance((int)_skillsBuffs[(int)skillName].Buffs[level]);
                 break;
-            case SkillName.Majesty:
+            case SkillName.DoubleDamage:
+                if(!_activeSkills[2].IsActive)
+                    _activeSkills[2].Enable();
+                
+                _doubleDamage.SetDuration(_skillsBuffs[(int)skillName].Buffs[level]);
                 break;
-            case SkillName.UltimateDefense:
+            case SkillName.UltimateShield:
+                if(!_activeSkills[1].IsActive)
+                    _activeSkills[1].Enable();
+                
+                _ultimateShield.SetDuration(_skillsBuffs[(int)skillName].Buffs[level]);
                 break;
-            case SkillName.BlazingSkin:
+            case SkillName.FireAura:
+                if(!_fireAura.gameObject.activeSelf)
+                    _fireAura.gameObject.SetActive(true);
+                
+                _fireAura.SetDamage((int)_skillsBuffs[(int)skillName].Buffs[level]);
                 break;
             case SkillName.FreezingSkin:
+                if(!_iceAura.gameObject.activeSelf)
+                    _iceAura.gameObject.SetActive(true);
+                
+                _iceAura.SetFreezePower(_skillsBuffs[(int)skillName].Buffs[level]);
                 break;
         }
         
@@ -183,9 +213,9 @@ public enum SkillName
     AttackSpeed,
     StonePeaks,
     Dodge,
-    Majesty,
-    UltimateDefense,
-    BlazingSkin,
+    DoubleDamage,
+    UltimateShield,
+    FireAura,
     FreezingSkin
 }
 

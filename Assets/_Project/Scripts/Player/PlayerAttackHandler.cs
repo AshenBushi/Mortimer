@@ -12,16 +12,20 @@ public class PlayerAttackHandler : MonoBehaviour
     
     private Player _player;
     private Animator _animator;
+    private DoubleDamage _doubleDamage;
     private List<Enemy> _enemiesInZone = new List<Enemy>();
     private float _currentAttackCooldown = DefaultAttackCooldown;
     private PlayerState _currentPlayerState;
     private float _timeToAttack;
     private bool _isPlayerAttack = false;
 
+    public List<Enemy> EnemiesInZone => _enemiesInZone;
+
     private void Awake()
     {
         _player = GetComponent<Player>();
         _animator = GetComponent<Animator>();
+        _doubleDamage = GetComponentInChildren<DoubleDamage>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -49,7 +53,7 @@ public class PlayerAttackHandler : MonoBehaviour
     {
         _animator.SetTrigger("StonePeaks");
         _animator.speed = 1f;
-
+        
         yield return new WaitForSeconds(0.75f);
 
         Instantiate(_stonePeaks, transform);
@@ -65,22 +69,22 @@ public class PlayerAttackHandler : MonoBehaviour
 
         if (!_isPlayerAttack)
         {
-            _timeToAttack = _currentAttackCooldown / 2;
+            _timeToAttack = _currentAttackCooldown * 0.3f;
             _isPlayerAttack = true;
         }
 
         if (_timeToAttack >= _currentAttackCooldown)
         {
-            foreach (var enemy in _enemiesInZone)
-            {
-                enemy.TakeDamage(_player.PlayerStats.Damage);
-            }
-
             var _diedEnemies = _enemiesInZone.Where(enemy => enemy.CurrentState == EnemyState.Died).ToList();
 
             foreach (var diedEnemy in _diedEnemies)
             {
                 _enemiesInZone.Remove(diedEnemy);
+            }
+            
+            foreach (var enemy in _enemiesInZone)
+            {
+                enemy.TakeDamage(_player.PlayerStats.Damage * (_doubleDamage.IsDoubleDamage ? 2 : 1));
             }
 
             _timeToAttack = 0f;

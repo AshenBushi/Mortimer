@@ -13,9 +13,16 @@ public class Player : MonoBehaviour
     [SerializeField] private EnemySpawner _enemySpawner;
     [Space]
     [SerializeField] private PlayerStats _playerStats;
-    
+
+    private UltimateShield _ultimateShield;
+
     public PlayerStats PlayerStats => _playerStats;
     public event UnityAction OnHealthChanged;
+
+    private void Awake()
+    {
+        _ultimateShield = GetComponentInChildren<UltimateShield>();
+    }
 
     public void Init()
     {
@@ -47,6 +54,8 @@ public class Player : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        if(_ultimateShield.IsUltimateShield) return;
+
         if (_playerStats.DodgeChance > 0)
         {
             var randomValue = Random.Range(1, 101);
