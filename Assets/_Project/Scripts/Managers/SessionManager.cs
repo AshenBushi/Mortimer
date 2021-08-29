@@ -10,17 +10,19 @@ public class SessionManager : Singleton<SessionManager>
 
     public void StartSession()
     {
-        _gameScreen.Enable();
+        _gameScreen.Show();
         _enemySpawner.StartSession();
         _player.Init();
         SkillsHandler.Instance.Init();
+        AudioManager.Instance.TurnOnBattleMusic();
     }
 
     public void EndSession()
     {
-        _gameScreen.Disable();
+        _gameScreen.Hide();
         _enemySpawner.EndSession();
         _moneyCounter.SetActive(false);
-        _loseScreen.Enable();
+        _loseScreen.Show();
+        AudioManager.Instance.TurnOnMenuMusic();
     }
 }

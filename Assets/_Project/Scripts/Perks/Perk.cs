@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Perk : MonoBehaviour
 {
-    [SerializeField] [ItemCanBeNull] private List<Sprite> _icons;
+    private const int MaxLevel = 5; 
+    
+    [SerializeField] private List<Sprite> _icons;
     [SerializeField] private List<int> _prices;
     [SerializeField] private List<float> _boosts;
     
@@ -47,7 +48,9 @@ public class Perk : MonoBehaviour
 
     private void CheckSolvency()
     {
-        if (_currentLevel == _prices.Count - 1)
+        if(!gameObject.activeSelf) return;
+        
+        if (_currentLevel == MaxLevel)
             _isMaxLevel = true;
 
         if (_isMaxLevel)
@@ -56,7 +59,7 @@ public class Perk : MonoBehaviour
             _animator.Play("Idle");
             return;
         }
-        
+
         if (User.Instance.Money >= _prices[_currentLevel + 1])
         {
             _animator.Play("PerkEnable");

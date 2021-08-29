@@ -7,9 +7,9 @@ public class LoseScreen : UIPanel
     [SerializeField] private KillCounter _killCounter;
     [SerializeField] private TMP_Text _text;
 
-    public override void Enable()
+    public override void Show()
     {
-        base.Enable();
+        base.Show();
         _text.text = _killCounter.KillCount.ToString();
     }
 

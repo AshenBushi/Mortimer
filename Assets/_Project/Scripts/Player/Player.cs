@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using Random = UnityEngine.Random;
@@ -14,15 +15,16 @@ public class Player : MonoBehaviour
     [Space]
     [SerializeField] private PlayerStats _playerStats;
 
+    private PlayerAttackHandler _playerAttackHandler;
     private Animator _animator;
-    private UltimateShield _ultimateShield;
-
+    private UltimateDefense _ultimateDefense;
     public PlayerStats PlayerStats => _playerStats;
     public event UnityAction OnHealthChanged;
 
     private void Awake()
     {
-        _ultimateShield = GetComponentInChildren<UltimateShield>();
+        _playerAttackHandler = GetComponent<PlayerAttackHandler>();
+        _ultimateDefense = GetComponentInChildren<UltimateDefense>();
         _animator = GetComponent<Animator>();
     }
 
@@ -47,6 +49,7 @@ public class Player : MonoBehaviour
     private void Die()
     {
         _animator.SetTrigger("Died");
+        _playerAttackHandler.Die();
         SessionManager.Instance.EndSession();
     }
 
@@ -57,7 +60,7 @@ public class Player : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        if(_ultimateShield.IsUltimateShield) return;
+        if(_ultimateDefense.IsUltimateShield) return;
 
         if (_playerStats.DodgeChance > 0)
         {

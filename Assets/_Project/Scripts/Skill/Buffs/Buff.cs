@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Buff : MonoBehaviour
 {
+    [SerializeField] private GameObject _buffVFX;
     [SerializeField] private float _duration;
 
     private float _timeSpend;
@@ -29,6 +30,7 @@ public class Buff : MonoBehaviour
     protected virtual void Deactivate()
     {
         _isActive = false;
+        _buffVFX.SetActive(false);
     }
     
     public void SetDuration(float value)
@@ -40,6 +42,6 @@ public class Buff : MonoBehaviour
     {
         _isActive = true;
         _timeSpend = 0;
-        
+        _buffVFX.SetActive(true);
     }
 }

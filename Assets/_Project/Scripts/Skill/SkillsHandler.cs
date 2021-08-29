@@ -20,7 +20,7 @@ public class SkillsHandler : Singleton<SkillsHandler>
     [Header("Active Skills")]
     [SerializeField] private List<ActiveSkill> _activeSkills;
     [SerializeField] private DoubleDamage _doubleDamage;
-    [SerializeField] private UltimateShield _ultimateShield;
+    [SerializeField] private UltimateDefense _ultimateDefense;
     [Header("Auras")]
     [SerializeField] private FireAura _fireAura;
     [SerializeField] private IceAura _iceAura;
@@ -129,7 +129,7 @@ public class SkillsHandler : Singleton<SkillsHandler>
             selectedSkills.Add(skill);
         }
         
-        _skillPanel.Enable();
+        _skillPanel.Show();
 
         for (var i = 0; i < selectedSkills.Count; i++)
         {
@@ -172,7 +172,7 @@ public class SkillsHandler : Singleton<SkillsHandler>
                 if(!_activeSkills[1].IsActive)
                     _activeSkills[1].Enable();
                 
-                _ultimateShield.SetDuration(_skillsBuffs[(int)skillName].Buffs[level]);
+                _ultimateDefense.SetDuration(_skillsBuffs[(int)skillName].Buffs[level]);
                 break;
             case SkillName.FireAura:
                 if(!_fireAura.gameObject.activeSelf)
@@ -188,7 +188,7 @@ public class SkillsHandler : Singleton<SkillsHandler>
                 break;
         }
         
-        _skillPanel.Disable();
+        _skillPanel.Hide();
     }
 }
 

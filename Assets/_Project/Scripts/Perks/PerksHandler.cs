@@ -9,11 +9,13 @@ public class PerksHandler : Singleton<PerksHandler>
 
     private void Start()
     {
-        InitPerks();
+        StartCoroutine(InitPerks());
     }
 
-    private void InitPerks()
+    private IEnumerator InitPerks()
     {
+        yield return new WaitForSeconds(0f);
+        
         for (var i = 0; i < _perks.Count; i++)
         {
             _perks[i].Init(DataManager.Instance.Data.PerksLevels[i]);

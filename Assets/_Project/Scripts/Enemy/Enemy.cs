@@ -15,10 +15,10 @@ public class Enemy : MonoBehaviour
     
     private Player _target;
     private Animator _animator;
-    private Collider _collider;
     private EnemyState _currentState;
     private bool _isInit = false;
     private float _attackSpeed;
+    private AudioSource _audioSource;
     
     public int Damage => _damage;
     public int MoneyReward => _moneyReward;
@@ -30,7 +30,7 @@ public class Enemy : MonoBehaviour
     private void Awake()
     {
         _animator = GetComponent<Animator>();
-        _collider = GetComponent<Collider>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     public void Init(Player target, EnemyStats stats)
@@ -48,6 +48,8 @@ public class Enemy : MonoBehaviour
     {
         if (_currentState == EnemyState.Died || !_isInit) return;
         
+        transform.LookAt(_target.transform);
+        
         if (Vector3.Distance(_target.transform.position, transform.position) > 2.5f)
         {
             RunToTarget();
@@ -60,7 +62,6 @@ public class Enemy : MonoBehaviour
     private void Run()
     {
         transform.position = Vector3.MoveTowards(transform.position, _target.transform.position, Time.deltaTime * _speed);
-        transform.LookAt(_target.transform);
 
         if (!(Vector3.Distance(_target.transform.position, transform.position) < 2.4)) return;
         if (_currentState == EnemyState.Died) return;
@@ -112,7 +113,7 @@ public class Enemy : MonoBehaviour
 
     public void SetAttackSpeed(float value)
     {
-        _attackSpeed = value;
+        _animator.speed  = value;
     }
 
     public void Celebrate()

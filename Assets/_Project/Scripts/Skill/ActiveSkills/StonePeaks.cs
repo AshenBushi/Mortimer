@@ -9,11 +9,13 @@ public class StonePeaks : MonoBehaviour
     [SerializeField] private float _delayToApplyDamage;
 
     private ParticleSystem _particle;
+    private AudioSource _audioSource;
     private List<Enemy> _enemiesInZone = new List<Enemy>();
 
     private void Awake()
     {
         _particle = GetComponentInChildren<ParticleSystem>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -32,6 +34,8 @@ public class StonePeaks : MonoBehaviour
     private IEnumerator ApplyDamage()
     {
         yield return new WaitForSeconds(_delayToApplyDamage);
+        
+        _audioSource.Play();
 
         foreach (var enemy in _enemiesInZone)
         {

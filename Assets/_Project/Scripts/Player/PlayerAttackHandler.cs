@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class PlayerAttackHandler : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class PlayerAttackHandler : MonoBehaviour
     private PlayerState _currentPlayerState;
     private float _timeToAttack;
     private bool _isPlayerAttack = false;
+    private AudioSource _audioSource;
+    private List<AudioClip> _slashes => AudioManager.Instance.Slashes;
 
     public List<Enemy> EnemiesInZone => _enemiesInZone;
 
@@ -26,6 +29,7 @@ public class PlayerAttackHandler : MonoBehaviour
         _player = GetComponent<Player>();
         _animator = GetComponent<Animator>();
         _doubleDamage = GetComponentInChildren<DoubleDamage>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -56,7 +60,7 @@ public class PlayerAttackHandler : MonoBehaviour
         
         yield return new WaitForSeconds(0.75f);
 
-        Instantiate(_stonePeaks, transform);
+        Instantiate(_stonePeaks, _stonePeaks.transform.position, Quaternion.identity);
     }
 
     private void Attack()
@@ -69,7 +73,7 @@ public class PlayerAttackHandler : MonoBehaviour
 
         if (!_isPlayerAttack)
         {
-            _timeToAttack = _currentAttackCooldown * 0.3f;
+            _timeToAttack = _currentAttackCooldown * 0.75f;
             _isPlayerAttack = true;
         }
 
@@ -86,11 +90,20 @@ public class PlayerAttackHandler : MonoBehaviour
             {
                 enemy.TakeDamage(_player.PlayerStats.Damage * (_doubleDamage.IsDoubleDamage ? 2 : 1));
             }
+            
+            if(_enemiesInZone.Count > 0)
+                PlaySlashSound();
 
             _timeToAttack = 0f;
         }
 
         _timeToAttack += Time.deltaTime;
+    }
+    
+    private void PlaySlashSound()
+    {
+        _audioSource.pitch = Random.Range(0.9f, 1.1f);
+        _audioSource.PlayOneShot(_slashes[Random.Range(0, _slashes.Count)]);
     }
 
     public void DecreaseCooldown(float value)
@@ -111,6 +124,11 @@ public class PlayerAttackHandler : MonoBehaviour
         _animator.SetBool("IsAttack", false);
         _currentPlayerState = PlayerState.Idle;
     }
+
+    public void Die()
+    {
+        _currentPlayerState = PlayerState.Die;
+    }
     
     public void UseStonePeaks()
     {
@@ -123,5 +141,6 @@ public enum PlayerState
 {
     Idle,
     Attack,
-    UseSkill
+    UseSkill,
+    Die
 }
