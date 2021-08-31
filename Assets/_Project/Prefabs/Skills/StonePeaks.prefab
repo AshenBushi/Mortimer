@@ -60,7 +60,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _damage: 100
-  _delayToApplyDamage: 0.5
+  _delayToApplyDamage: 0.3
 --- !u!82 &4640352543696087403
 AudioSource:
   m_ObjectHideFlags: 0

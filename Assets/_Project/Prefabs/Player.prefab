@@ -714,6 +714,7 @@ GameObject:
   - component: {fileID: 3757360678201208635}
   - component: {fileID: 5304154407521308849}
   - component: {fileID: 7813127931966004510}
+  - component: {fileID: 1603972467176472275}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -792,7 +793,7 @@ Animator:
   m_GameObject: {fileID: 5304154407521308848}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 32562d1256a1b3b4ca9be3d6ce7adf64, type: 3}
-  m_Controller: {fileID: 9100000, guid: 789aa64351d6c1d4a983c2cf1feb7bbc, type: 2}
+  m_Controller: {fileID: 9100000, guid: 2ff290f3e9e36724e9cd18a7c4790c14, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -910,6 +911,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemySpawner: {fileID: 0}
+  _activeSkills: []
+  _doubleDamage: {fileID: 0}
+  _ultimateDefense: {fileID: 0}
+  _fireAura: {fileID: 0}
+  _iceAura: {fileID: 0}
   _playerStats:
     MaxHealth: 100
     Health: 100
@@ -928,7 +934,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 455a41a31481c0048b970ddb992e82fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _attackZone: {fileID: 1603972467176472275}
   _stonePeaks: {fileID: 4698677275724918385, guid: 88c03f2ccab4e6847860dfc7fd5af1c0, type: 3}
+  _timingForAttacks:
+  - 0.45
+  - 0.4
+  - 0.55
+  _attacksAnimationDurations:
+  - 1.4
+  - 1.16
+  - 1.4
+  _timingForStonePeaks: 0.55
+--- !u!114 &1603972467176472275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5304154407521308848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 776ebfbc8f79ae74898493e467c2fde4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5304161850973028990
 GameObject:
   m_ObjectHideFlags: 0

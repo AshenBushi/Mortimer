@@ -7,9 +7,11 @@ public class SessionManager : Singleton<SessionManager>
     [SerializeField] private GameScreen _gameScreen;
     [SerializeField] private GameObject _moneyCounter;
     [SerializeField] private LoseScreen _loseScreen;
+    [SerializeField] private GetCoins _getCoins;
 
     public void StartSession()
     {
+        _getCoins.gameObject.SetActive(false);
         _gameScreen.Show();
         _enemySpawner.StartSession();
         _player.Init();

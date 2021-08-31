@@ -244,7 +244,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Attack2
-  m_Speed: 0.928
+  m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 2841149373080488192}
@@ -361,7 +361,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Attack1
-  m_Speed: 1.12
+  m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 2439665702888977432}
@@ -389,7 +389,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: StonePeaks
-  m_Speed: 0.91
+  m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -6262242961593415785}
@@ -440,8 +440,8 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Attack4
-  m_Speed: 1.12
+  m_Name: Attack3
+  m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -5582784651911717530}

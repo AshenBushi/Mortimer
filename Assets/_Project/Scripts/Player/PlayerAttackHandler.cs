@@ -7,22 +7,25 @@ using Random = UnityEngine.Random;
 
 public class PlayerAttackHandler : MonoBehaviour
 {
-    private const float DefaultAttackCooldown = 1.25f;
-    
+    private const float DefaultAttackSpeed = 1.25f;
+
+    [SerializeField] private AttackZone _attackZone;
     [SerializeField] private StonePeaks _stonePeaks;
+    [SerializeField] private List<float> _timingForAttacks;
+    [SerializeField] private List<float> _attacksAnimationDurations;
+    [SerializeField] private float _timingForStonePeaks;
     
+
     private Player _player;
     private Animator _animator;
     private DoubleDamage _doubleDamage;
-    private List<Enemy> _enemiesInZone = new List<Enemy>();
-    private float _currentAttackCooldown = DefaultAttackCooldown;
     private PlayerState _currentPlayerState;
-    private float _timeToAttack;
-    private bool _isPlayerAttack = false;
     private AudioSource _audioSource;
-    private List<AudioClip> _slashes => AudioManager.Instance.Slashes;
+    private int _currentAttack;
+    private bool _isPlayerAttack;
 
-    public List<Enemy> EnemiesInZone => _enemiesInZone;
+    private float AttackSpeed => _player.PlayerStats.AttackSpeed;
+    private List<AudioClip> _slashes => AudioManager.Instance.Slashes;
 
     private void Awake()
     {
@@ -32,72 +35,67 @@ public class PlayerAttackHandler : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.TryGetComponent(out Enemy enemy))
-        {
-            _enemiesInZone.Add(enemy);
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.TryGetComponent(out Enemy enemy))
-        {
-            _enemiesInZone.Remove(enemy);
-        }
-    }
-
     private void Update()
     {
-        Attack();
+        CheckState();
     }
 
+    private void CheckState()
+    {
+        if(_currentPlayerState == PlayerState.Die) return;
+
+        if (_isPlayerAttack) return;
+        
+        if (_currentPlayerState == PlayerState.Attack)
+        {
+            StartCoroutine(AttackCoroutine());
+        }
+        
+        if (_currentPlayerState == PlayerState.Idle)
+        {
+            _currentAttack = 0;
+        }
+    }
+    
     private IEnumerator StonePeaksCoroutine()
     {
         _animator.SetTrigger("StonePeaks");
         _animator.speed = 1f;
         
-        yield return new WaitForSeconds(0.75f);
+        yield return new WaitForSeconds(_timingForStonePeaks);
 
         Instantiate(_stonePeaks, _stonePeaks.transform.position, Quaternion.identity);
     }
 
+    private IEnumerator AttackCoroutine()
+    {
+        _isPlayerAttack = true;
+        
+        yield return new WaitForSeconds(_timingForAttacks[_currentAttack] / AttackSpeed);
+        
+        Attack();
+
+        yield return new WaitForSeconds((_attacksAnimationDurations[_currentAttack] - _timingForAttacks[_currentAttack]) / AttackSpeed);
+        
+        if (_currentAttack == _timingForAttacks.Count - 1)
+            _currentAttack = 0;
+        else
+            _currentAttack++;
+
+        _isPlayerAttack = false;
+    }
+
     private void Attack()
     {
-        if (_currentPlayerState != PlayerState.Attack)
-        {
-            _isPlayerAttack = false;
-            return;
-        }
-
-        if (!_isPlayerAttack)
-        {
-            _timeToAttack = _currentAttackCooldown * 0.75f;
-            _isPlayerAttack = true;
-        }
-
-        if (_timeToAttack >= _currentAttackCooldown)
-        {
-            var _diedEnemies = _enemiesInZone.Where(enemy => enemy.CurrentState == EnemyState.Died).ToList();
-
-            foreach (var diedEnemy in _diedEnemies)
-            {
-                _enemiesInZone.Remove(diedEnemy);
-            }
+        var enemiesInZone = _attackZone.GetEnemiesInZone();
             
-            foreach (var enemy in _enemiesInZone)
-            {
-                enemy.TakeDamage(_player.PlayerStats.Damage * (_doubleDamage.IsDoubleDamage ? 2 : 1));
-            }
-            
-            if(_enemiesInZone.Count > 0)
-                PlaySlashSound();
-
-            _timeToAttack = 0f;
+        if(enemiesInZone.Count > 0)
+            PlaySlashSound();
+        
+        foreach (var enemy in enemiesInZone)
+        {
+            enemy.TakeDamage(_player.PlayerStats.Damage * (_doubleDamage.IsDoubleDamage ? 2 : 1));
         }
-
-        _timeToAttack += Time.deltaTime;
     }
     
     private void PlaySlashSound()
@@ -106,11 +104,6 @@ public class PlayerAttackHandler : MonoBehaviour
         _audioSource.PlayOneShot(_slashes[Random.Range(0, _slashes.Count)]);
     }
 
-    public void DecreaseCooldown(float value)
-    {
-        _currentAttackCooldown = DefaultAttackCooldown / value;
-    }
-    
     public void ToAttack()
     {
         _animator.speed = _player.PlayerStats.AttackSpeed;
