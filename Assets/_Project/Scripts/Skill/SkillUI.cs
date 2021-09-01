@@ -40,7 +40,7 @@ public class SkillUI : MonoBehaviour
             SkillName.DoubleDamage => $"Duration: {buff} sec",
             SkillName.UltimateShield => $"Duration: {buff} sec",
             SkillName.FireAura => $"{buff} per sec",
-            SkillName.FreezingSkin => $"*{buff}",
+            SkillName.FreezingSkin => $"{buff * 100}%",
             _ => _buff.text
         };
 

@@ -17,13 +17,24 @@ public class EnemySpawner : MonoBehaviour
 
     private List<Enemy> _enemies = new List<Enemy>();
 
+    private EnemyPool _enemyPool;
     private int _currentWave = 0;
     private int _enemiesSpawned = 0;
     private float _timeSpend;
     private bool _inSession = false;
 
     public event UnityAction<Enemy> OnEnemyKilled;
-    
+
+    private void Awake()
+    {
+        _enemyPool = GetComponent<EnemyPool>();
+    }
+
+    private void Start()
+    {
+        _enemyPool.Initialize(_templates[0], _templates[1], _templates[2]);
+    }
+
     private void Update()
     {
         if (!_inSession) return;
@@ -65,28 +76,49 @@ public class EnemySpawner : MonoBehaviour
             if (_currentWave != _waves.Count - 1)
             {
                 _currentWave++;
+                _enemiesSpawned = 0;
             }
-
-            _enemiesSpawned = 0;
+            else
+            {
+                _enemiesSpawned++;
+            }
         }
 
         var enemyType = GetEnemyType(_waves[_currentWave]);
-        
-        var enemy = Instantiate(_templates[enemyType], _spawnPositions[Random.Range(0, _spawnPositions.Count)].position, Quaternion.identity,
-            transform);
 
+        Enemy enemy;
+        
         switch (enemyType)
         {
-            case 0 :
-                enemy.Init(_player, _waves[_currentWave].OneHanded);
+            case 0:
+                enemy = _enemyPool.TryGetOneHanded();
                 break;
-            case 1 :
-                enemy.Init(_player, _waves[_currentWave].TwoHanded);
+            case 1:
+                enemy = _enemyPool.TryGetTwoHanded();
                 break;
-            case 2 :
-                enemy.Init(_player, _waves[_currentWave].Shield);
+            case 2:
+                enemy = _enemyPool.TryGetShield();
+                break;
+            default:
+                enemy = _enemyPool.TryGetOneHanded();
                 break;
         }
+
+        enemy.transform.position = _spawnPositions[Random.Range(0, 3)].position;
+        
+        var enemyStats = enemyType switch
+        {
+            0 => _waves[_currentWave].OneHanded,
+            1 => _waves[_currentWave].TwoHanded,
+            2 => _waves[_currentWave].Shield,
+            _ => new EnemyStats()
+        };
+
+        enemyStats.Health *= 1 + _enemiesSpawned / 100;
+        enemyStats.Damage *= 1 + _enemiesSpawned / 100;
+        enemyStats.Experience *= 1 + _enemiesSpawned / 100;
+        enemyStats.MoneyReward *= 1 + _enemiesSpawned / 100;
+        enemy.Init(_player, enemyStats);
         
         _enemies.Add(enemy);
         _enemiesSpawned++;

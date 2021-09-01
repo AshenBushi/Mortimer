@@ -1,23 +1,28 @@
-using System;
 using TMPro;
 using UnityEngine;
 
 public class MoneyCounter : MonoBehaviour
 {
+    [SerializeField] private Player _player;
     [SerializeField] private TMP_Text _text;
 
     private void OnEnable()
     {
-        User.Instance.OnMoneyChanged += UpdateCounter;
+        _player.OnMoneyChanged += UpdateCounter;
     }
     
     private void OnDisable()
     {
-        User.Instance.OnMoneyChanged += UpdateCounter;
+        _player.OnMoneyChanged += UpdateCounter;
+    }
+
+    private void Start()
+    {
+        UpdateCounter();
     }
 
     private void UpdateCounter()
     {
-        _text.text = User.Instance.Money.ToString();
+        _text.text = _player.Money.ToString();
     }
 }

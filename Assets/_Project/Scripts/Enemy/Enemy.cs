@@ -35,6 +35,8 @@ public class Enemy : MonoBehaviour
 
     public void Init(Player target, EnemyStats stats)
     {
+        _currentState = EnemyState.Idle;
+        gameObject.SetActive(true);
         _target = target;
         _health = stats.Health;
         _damage = stats.Damage;
@@ -50,7 +52,7 @@ public class Enemy : MonoBehaviour
         
         transform.LookAt(_target.transform);
         
-        if (Vector3.Distance(_target.transform.position, transform.position) > 2.5f)
+        if (Vector3.Distance(_target.transform.position, transform.position) > 2.45f)
         {
             RunToTarget();
         }
@@ -63,7 +65,7 @@ public class Enemy : MonoBehaviour
     {
         transform.position = Vector3.MoveTowards(transform.position, _target.transform.position, Time.deltaTime * _speed);
 
-        if (!(Vector3.Distance(_target.transform.position, transform.position) < 2.4)) return;
+        if (Vector3.Distance(_target.transform.position, transform.position) > 2.4) return;
         if (_currentState == EnemyState.Died) return;
         AttackTarget();
     }
@@ -98,7 +100,7 @@ public class Enemy : MonoBehaviour
         
         yield return new WaitForSeconds(1f);
         
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 
     public void TakeDamage(int damage)

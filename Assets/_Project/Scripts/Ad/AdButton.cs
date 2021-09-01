@@ -61,5 +61,12 @@ public class AdButton : MonoBehaviour
         AdManager.Instance.ShowRewardVideo();
         Button.interactable = false;
     }
-    
+
+    public void TryEnableButton()
+    {
+        if (AdManager.Instance.RewardedAd.IsLoaded())
+        {
+            Button.interactable = true;
+        }
+    }
 }

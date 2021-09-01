@@ -24,15 +24,20 @@ public class Player : MonoBehaviour
 
     private PlayerAttackHandler _playerAttackHandler;
     private Animator _animator;
+    
+    public int Money { get; private set; }
     public PlayerStats PlayerStats => _playerStats;
     public event UnityAction OnHealthChanged;
+    public event UnityAction OnMoneyChanged;
 
     private void Awake()
     {
         _playerAttackHandler = GetComponent<PlayerAttackHandler>();
         _ultimateDefense = GetComponentInChildren<UltimateDefense>();
         _animator = GetComponent<Animator>();
+        SetMoney();
     }
+    
     public void Init()
     {
         _playerStats = new PlayerStats(DefaultMaxHealth * PerksHandler.Instance.GetPerkBoost(PerkName.Health),
@@ -40,24 +45,49 @@ public class Player : MonoBehaviour
         
         OnHealthChanged?.Invoke();
     }
+    
     private void OnEnable()
     {
         _enemySpawner.OnEnemyKilled += OnEnemyKilled;
     }
+    
     private void OnDisable()
     {
         _enemySpawner.OnEnemyKilled -= OnEnemyKilled;
+        DataManager.Instance.Data.Money = Money;
+        DataManager.Instance.Save();
     }
+    
     private void Die()
     {
         _animator.SetTrigger("Died");
         _playerAttackHandler.Die();
         SessionManager.Instance.EndSession();
     }
+    
     private void OnEnemyKilled(Enemy enemy)
     {
-        User.Instance.AddMoney((int)(enemy.MoneyReward * PerksHandler.Instance.GetPerkBoost(PerkName.Income)));
+        AddMoney((int)(enemy.MoneyReward * PerksHandler.Instance.GetPerkBoost(PerkName.Income)));
     }
+    
+    private void SetMoney()
+    {
+        Money = DataManager.Instance.Data.Money;
+        OnMoneyChanged?.Invoke();
+    }
+    
+    public void AddMoney(int value)
+    {
+        Money += value;
+        OnMoneyChanged?.Invoke();
+    }
+    
+    public void SpendMoney(int value)
+    {
+        Money -= value;
+        OnMoneyChanged?.Invoke();
+    }
+
     public void TakeDamage(int damage)
     {
         if(_ultimateDefense.IsUltimateShield) return;
@@ -78,6 +108,7 @@ public class Player : MonoBehaviour
             Die();
         }
     }
+    
     public void IncreaseHealth(int value)
     {
         _playerStats.MaxHealth += value;
@@ -85,18 +116,22 @@ public class Player : MonoBehaviour
         
         OnHealthChanged?.Invoke();
     }
+    
     public void IncreaseDamage(int value)
     {
         _playerStats.Damage += value;
     }
+    
     public void SetAttackSpeed(float value)
     {
         _playerStats.AttackSpeed = value;
     }
+    
     public void SetDodgeChance(int value)
     {
         _playerStats.DodgeChance = value;
     }
+    
     public void UpgradeStonePeaks(int value)
     {
         if(!_activeSkills[0].IsActive)
@@ -104,26 +139,30 @@ public class Player : MonoBehaviour
         
         _activeSkills[0].SetCooldown(value);
     }
-    public void UpgradeDoubleDamage(int value)
+    
+    public void UpgradeUltimateDefense(int value)
     {
         if(!_activeSkills[1].IsActive)
             _activeSkills[1].Enable();
         
-        _doubleDamage.SetDuration(value);
+        _ultimateDefense.SetDuration(value);
     }
-    public void UpgradeUltimateDefense(int value)
+    
+    public void UpgradeDoubleDamage(int value)
     {
         if(!_activeSkills[2].IsActive)
             _activeSkills[2].Enable();
         
-        _ultimateDefense.SetDuration(value);
+        _doubleDamage.SetDuration(value);
     }
+    
     public void UpgradeFireAura(int value)
     {
         if(!_fireAura.gameObject.activeSelf)
             _fireAura.gameObject.SetActive(true);
         _fireAura.SetDamage(value);
     }
+    
     public void UpgradeIceAura(float value)
     {
         if(!_iceAura.gameObject.activeSelf)

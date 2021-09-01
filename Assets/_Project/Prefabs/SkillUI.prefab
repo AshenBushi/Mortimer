@@ -713,7 +713,7 @@ MonoBehaviour:
   - Strikes the area with stone peaks
   - Gives a chance to dodge an attack
   - Doubles damage by
-  - Grants invulnerability to damage on
+  - Gives damage resistance on
   - Deals area fire damage
   - Slows down the attack of enemies
   _rarity: {fileID: 7500481564336768019}

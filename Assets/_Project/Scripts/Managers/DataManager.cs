@@ -9,8 +9,16 @@ public class DataManager : Singleton<DataManager>
 
     protected override void Awake()
     {
-        base.Awake();
-
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+        
         Load();
     }
 

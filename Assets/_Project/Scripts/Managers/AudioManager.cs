@@ -6,23 +6,29 @@ public class AudioManager : Singleton<AudioManager>
     [SerializeField] private AudioSource _musicSource;
     [SerializeField] private List<AudioClip> _backgroundsMusic;
     [SerializeField] private List<AudioClip> _slashes;
-    [SerializeField] private AudioClip _footsteps;
 
     public List<AudioClip> Slashes => _slashes;
-    public AudioClip Footsteps => _footsteps;
 
-    private void Start()
+    protected override void Awake()
     {
-        TurnOnMenuMusic();
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
-    public void TurnOnBattleMusic()
+    public void PlayBattleMusic()
     {
         _musicSource.clip = _backgroundsMusic[1];
         _musicSource.Play();
     }
     
-    public void TurnOnMenuMusic()
+    public void PlayMenuMusic()
     {
         _musicSource.clip = _backgroundsMusic[0];
         _musicSource.Play();

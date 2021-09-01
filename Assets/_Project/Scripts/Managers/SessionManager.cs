@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class SessionManager : Singleton<SessionManager>
@@ -9,6 +10,11 @@ public class SessionManager : Singleton<SessionManager>
     [SerializeField] private LoseScreen _loseScreen;
     [SerializeField] private GetCoins _getCoins;
 
+    private void Start()
+    {
+        AudioManager.Instance.PlayMenuMusic();
+    }
+
     public void StartSession()
     {
         _getCoins.gameObject.SetActive(false);
@@ -16,7 +22,7 @@ public class SessionManager : Singleton<SessionManager>
         _enemySpawner.StartSession();
         _player.Init();
         SkillsHandler.Instance.Init();
-        AudioManager.Instance.TurnOnBattleMusic();
+        AudioManager.Instance.PlayBattleMusic();
     }
 
     public void EndSession()
@@ -25,6 +31,6 @@ public class SessionManager : Singleton<SessionManager>
         _enemySpawner.EndSession();
         _moneyCounter.SetActive(false);
         _loseScreen.Show();
-        AudioManager.Instance.TurnOnMenuMusic();
+        AudioManager.Instance.PlayMenuMusic();
     }
 }

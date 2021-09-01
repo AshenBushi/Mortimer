@@ -10,7 +10,8 @@ public class Perk : MonoBehaviour
     [SerializeField] private List<Sprite> _icons;
     [SerializeField] private List<int> _prices;
     [SerializeField] private List<float> _boosts;
-    
+
+    private Player _player;
     private Image _icon;
     private Button _button;
     private Animator _animator;
@@ -27,29 +28,28 @@ public class Perk : MonoBehaviour
         _animator = GetComponent<Animator>();
     }
 
-    public void Init(int level)
+    public void Init(Player player, int level)
     {
         _currentLevel = level;
+        _player = player;
         SetIcon();
         CheckSolvency();
-        User.Instance.OnMoneyChanged += CheckSolvency;
+        _player.OnMoneyChanged += CheckSolvency;
     }
 
     private void OnEnable()
     {
-        if(User.Instance != null)
-            User.Instance.OnMoneyChanged += CheckSolvency;
+        if(_player != null)
+            _player.OnMoneyChanged += CheckSolvency;
     }
 
     private void OnDisable()
     {
-        User.Instance.OnMoneyChanged -= CheckSolvency;
+        _player.OnMoneyChanged -= CheckSolvency;
     }
 
     private void CheckSolvency()
     {
-        if(!gameObject.activeSelf) return;
-        
         if (_currentLevel == MaxLevel)
             _isMaxLevel = true;
 
@@ -60,7 +60,7 @@ public class Perk : MonoBehaviour
             return;
         }
 
-        if (User.Instance.Money >= _prices[_currentLevel + 1])
+        if (_player.Money >= _prices[_currentLevel + 1])
         {
             _animator.Play("PerkEnable");
             _button.interactable = true;
@@ -82,7 +82,7 @@ public class Perk : MonoBehaviour
     {
         _currentLevel++;
 
-        User.Instance.SpendMoney(_prices[_currentLevel]);
+        _player.SpendMoney(_prices[_currentLevel]);
 
         SetIcon();
         

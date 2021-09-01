@@ -5,9 +5,11 @@ using UnityEngine;
 
 public class GetCoins : AdButton
 {
+    [SerializeField] private Player _player;
+    
     protected override void HandleUserEarnReward(object sender, Reward e)
     {
         base.HandleUserEarnReward(sender, e);
-        User.Instance.AddMoney(500);
+        _player.AddMoney(500);
     }
 }

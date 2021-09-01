@@ -7,25 +7,17 @@ public class AttackZone : MonoBehaviour
 {
     private readonly List<Enemy> _enemiesInZone = new List<Enemy>();
     
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
-        if (other.TryGetComponent(out Enemy enemy))
-        {
-            _enemiesInZone.Add(enemy);
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.TryGetComponent(out Enemy enemy))
-        {
-            _enemiesInZone.Remove(enemy);
-        }
+        if (!other.TryGetComponent(out Enemy enemy)) return;
+        if (_enemiesInZone.Contains(enemy)) return;
+        
+        _enemiesInZone.Add(enemy);
     }
 
     public List<Enemy> GetEnemiesInZone()
     {
-        var _diedEnemies = _enemiesInZone.Where(enemy => enemy.CurrentState == EnemyState.Died).ToList();
+        var _diedEnemies = _enemiesInZone.Where(enemy => enemy.CurrentState == EnemyState.Died || enemy.CurrentState == EnemyState.Run).ToList();
 
         foreach (var diedEnemy in _diedEnemies)
         {

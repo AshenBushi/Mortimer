@@ -1,13 +1,8 @@
 using System;
-using System.Collections.Generic;
 using GoogleMobileAds.Api;
-using UnityEngine;
 
 public class AdManager : Singleton<AdManager>
 {
-    private float _timeSpendFromLastInterstitial = 30f;
-
-    public bool IsInterstitialShowed { get; private set; }
     public InterstitialAd Interstitial { get; private set; }
     public RewardedAd RewardedAd{ get; private set; }
 
@@ -23,24 +18,7 @@ public class AdManager : Singleton<AdManager>
             Destroy(gameObject);
         }
 
-        MobileAds.Initialize((initStatus) =>
-        {
-            Dictionary<string, AdapterStatus> map = initStatus.getAdapterStatusMap();
-            foreach (KeyValuePair<string, AdapterStatus> keyValuePair in map)
-            {
-                string className = keyValuePair.Key;
-                AdapterStatus status = keyValuePair.Value;
-                switch (status.InitializationState)
-                {
-                    case AdapterState.NotReady:
-                        MonoBehaviour.print("Adapter: " + className + " not ready.");
-                        break;
-                    case AdapterState.Ready:
-                        MonoBehaviour.print("Adapter: " + className + " is initialized.");
-                        break;
-                }
-            }
-        });
+        MobileAds.Initialize(initStatus => { });
         
         InitializeRewarded();
         InitializeInterstitial();
@@ -52,12 +30,6 @@ public class AdManager : Singleton<AdManager>
         RewardedAd.OnAdFailedToShow -= HandleRewardedAdFailedToShow;
         RewardedAd.OnUserEarnedReward -= HandleUserEarnedReward;
         RewardedAd.OnAdClosed -= HandleRewardedAdClosed;
-    }
-
-    private void Update()
-    {
-        if (_timeSpendFromLastInterstitial < 30)
-            _timeSpendFromLastInterstitial += Time.deltaTime;
     }
 
     private void InitializeRewarded()
@@ -99,7 +71,6 @@ public class AdManager : Singleton<AdManager>
     private void HandleOnAdClosed(object sender, EventArgs e)
     {
         InitializeInterstitial();
-        IsInterstitialShowed = true;
     }
     
     private void HandleRewardedAdFailedToShow(object sender, AdErrorEventArgs e)
@@ -117,13 +88,10 @@ public class AdManager : Singleton<AdManager>
         InitializeRewarded();
     }
 
-    public bool ShowInterstitial()
+    public void ShowInterstitial()
     {
-        if (!Interstitial.IsLoaded() || _timeSpendFromLastInterstitial < 30f) return false;
+        if (!Interstitial.IsLoaded()) return;
         Interstitial.Show();
-        _timeSpendFromLastInterstitial = 0f;
-        IsInterstitialShowed = false;
-        return true;
     }
 
     public void ShowRewardVideo()

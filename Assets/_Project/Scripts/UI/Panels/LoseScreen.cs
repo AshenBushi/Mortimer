@@ -15,6 +15,6 @@ public class LoseScreen : UIPanel
 
     public void Restart()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 }

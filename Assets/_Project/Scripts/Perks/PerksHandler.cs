@@ -6,19 +6,18 @@ using UnityEngine;
 public class PerksHandler : Singleton<PerksHandler>
 {
     [SerializeField] private List<Perk> _perks;
+    [SerializeField] private Player _player;
 
     private void Start()
     {
-        StartCoroutine(InitPerks());
+        InitPerks();
     }
 
-    private IEnumerator InitPerks()
+    private void InitPerks()
     {
-        yield return new WaitForSeconds(0f);
-        
         for (var i = 0; i < _perks.Count; i++)
         {
-            _perks[i].Init(DataManager.Instance.Data.PerksLevels[i]);
+            _perks[i].Init(_player, DataManager.Instance.Data.PerksLevels[i]);
         }
     }
 

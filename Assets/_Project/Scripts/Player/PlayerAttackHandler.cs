@@ -14,8 +14,8 @@ public class PlayerAttackHandler : MonoBehaviour
     [SerializeField] private List<float> _timingForAttacks;
     [SerializeField] private List<float> _attacksAnimationDurations;
     [SerializeField] private float _timingForStonePeaks;
+    [SerializeField] private float _stonePeaksAnimationDuration;
     
-
     private Player _player;
     private Animator _animator;
     private DoubleDamage _doubleDamage;
@@ -23,6 +23,7 @@ public class PlayerAttackHandler : MonoBehaviour
     private AudioSource _audioSource;
     private int _currentAttack;
     private bool _isPlayerAttack;
+    private bool _isPlayerUseSkill;
 
     private float AttackSpeed => _player.PlayerStats.AttackSpeed;
     private List<AudioClip> _slashes => AudioManager.Instance.Slashes;
@@ -45,26 +46,41 @@ public class PlayerAttackHandler : MonoBehaviour
         if(_currentPlayerState == PlayerState.Die) return;
 
         if (_isPlayerAttack) return;
-        
-        if (_currentPlayerState == PlayerState.Attack)
+        if (_isPlayerUseSkill) return;
+
+        switch (_currentPlayerState)
         {
-            StartCoroutine(AttackCoroutine());
-        }
-        
-        if (_currentPlayerState == PlayerState.Idle)
-        {
-            _currentAttack = 0;
+            case PlayerState.Idle:
+                _animator.Play("Idle");
+                _animator.speed = 1;
+                _currentAttack = 0;
+                break;
+            case PlayerState.Attack:
+                _animator.speed = _player.PlayerStats.AttackSpeed;
+                _animator.Play($"Attack{_currentAttack + 1}");
+            
+                StartCoroutine(AttackCoroutine());
+                break;
+            case PlayerState.UseSkill:
+                _animator.Play("StonePeaks");
+                _animator.speed = 1f;
+                StartCoroutine(StonePeaksCoroutine());
+                break;
         }
     }
     
     private IEnumerator StonePeaksCoroutine()
     {
-        _animator.SetTrigger("StonePeaks");
-        _animator.speed = 1f;
-        
+        _isPlayerUseSkill = true;
+
         yield return new WaitForSeconds(_timingForStonePeaks);
 
         Instantiate(_stonePeaks, _stonePeaks.transform.position, Quaternion.identity);
+
+        yield return new WaitForSeconds(_stonePeaksAnimationDuration - _timingForStonePeaks);
+
+        _currentPlayerState = PlayerState.Idle;
+        _isPlayerUseSkill = false;
     }
 
     private IEnumerator AttackCoroutine()
@@ -106,15 +122,11 @@ public class PlayerAttackHandler : MonoBehaviour
 
     public void ToAttack()
     {
-        _animator.speed = _player.PlayerStats.AttackSpeed;
-        _animator.SetBool("IsAttack", true);
         _currentPlayerState = PlayerState.Attack;
     }
 
     public void ToIdle()
     {
-        _animator.speed = 1;
-        _animator.SetBool("IsAttack", false);
         _currentPlayerState = PlayerState.Idle;
     }
 
@@ -125,7 +137,6 @@ public class PlayerAttackHandler : MonoBehaviour
     
     public void UseStonePeaks()
     {
-        StartCoroutine(StonePeaksCoroutine());
         _currentPlayerState = PlayerState.UseSkill;
     }
 }
