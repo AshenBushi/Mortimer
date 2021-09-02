@@ -24,6 +24,7 @@ public class EnemySpawner : MonoBehaviour
     private bool _inSession = false;
 
     public event UnityAction<Enemy> OnEnemyKilled;
+    public event UnityAction<int, int> OnEnemySpawned;
 
     private void Awake()
     {
@@ -122,6 +123,8 @@ public class EnemySpawner : MonoBehaviour
         
         _enemies.Add(enemy);
         _enemiesSpawned++;
+        
+        OnEnemySpawned?.Invoke(_enemiesSpawned, _currentWave);
         
         enemy.OnEnemyDied += OnEnemyDied;
     }

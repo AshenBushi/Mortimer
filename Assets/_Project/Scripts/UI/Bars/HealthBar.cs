@@ -31,8 +31,8 @@ public class HealthBar : Bar
         base.ChangeBarValue(value);
         _text.text = value.ToString();
     }
-    
-    public override void SetBarValue(int maxValue, int currentValue)
+
+    protected override void SetBarValue(int maxValue, int currentValue)
     {
         base.SetBarValue(maxValue, currentValue);
         _text.text = currentValue.ToString();

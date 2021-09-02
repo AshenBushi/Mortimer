@@ -12,7 +12,7 @@ public class KillCounter : MonoBehaviour
 
     private void Awake()
     {
-        _text = GetComponentInChildren<TMP_Text>();
+        _text = GetComponent<TMP_Text>();
     }
 
     private void OnEnable()
@@ -27,12 +27,12 @@ public class KillCounter : MonoBehaviour
 
     private void Start()
     {
-        UpdateCounter(new Enemy());
+        UpdateCounter();
     }
 
-    private void UpdateCounter(Enemy enemy)
+    private void UpdateCounter(Enemy enemy = null)
     {
         _killCount++;
-        _text.text = _killCount.ToString();
+        _text.text = $"You killed: {_killCount}";
     }
 }

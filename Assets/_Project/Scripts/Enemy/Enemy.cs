@@ -16,10 +16,9 @@ public class Enemy : MonoBehaviour
     private Player _target;
     private Animator _animator;
     private EnemyState _currentState;
-    private bool _isInit = false;
+    private bool _isInit;
     private float _attackSpeed;
-    private AudioSource _audioSource;
-    
+
     public int Damage => _damage;
     public int MoneyReward => _moneyReward;
     public int ExperienceReward => _experienceReward;
@@ -30,7 +29,6 @@ public class Enemy : MonoBehaviour
     private void Awake()
     {
         _animator = GetComponent<Animator>();
-        _audioSource = GetComponent<AudioSource>();
     }
 
     public void Init(Player target, EnemyStats stats)
@@ -48,46 +46,61 @@ public class Enemy : MonoBehaviour
     
     private void Update()
     {
-        if (_currentState == EnemyState.Died || !_isInit) return;
+        SelectState();
+        CheckState();
+    }
+
+    private void SelectState()
+    {
+        if (!_isInit) return;
         
         transform.LookAt(_target.transform);
         
         if (Vector3.Distance(_target.transform.position, transform.position) > 2.45f)
+            ToRunState();
+        else
+            ToAttackState();
+    }
+    
+    private void CheckState()
+    {
+        switch (_currentState)
         {
-            RunToTarget();
+            case EnemyState.Idle:
+                _animator.Play("Idle");
+                break;
+            case EnemyState.Run:
+                _animator.speed = 1;
+                _animator.Play("Run");
+                Run();
+                break;
+            case EnemyState.Attack:
+                _animator.speed = _attackSpeed;
+                _animator.Play("Attack1");
+                break;
+            case EnemyState.Died:
+                return;
         }
-        
-        if(_currentState == EnemyState.Run)
-            Run();
     }
 
     private void Run()
     {
         transform.position = Vector3.MoveTowards(transform.position, _target.transform.position, Time.deltaTime * _speed);
-
-        if (Vector3.Distance(_target.transform.position, transform.position) > 2.4) return;
-        if (_currentState == EnemyState.Died) return;
-        AttackTarget();
     }
 
-    private void RunToTarget()
+    private void ToRunState()
     {
-        _animator.speed = 1;
-        _animator.Play("Run");
         _currentState = EnemyState.Run;
     }
 
-    private void AttackTarget()
+    private void ToAttackState()
     {
-        _animator.speed = _attackSpeed;
-        _animator.Play("Attack1");
         _currentState = EnemyState.Attack;
     }
 
     private IEnumerator Die()
     {
-        if (_currentState == EnemyState.Died) yield break;
-        
+        _isInit = false;
         var dieAnimationIndex = Random.Range(1, 5);
 
         _animator.speed = 1;
@@ -103,6 +116,12 @@ public class Enemy : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    public void Celebrate()
+    {
+        _isInit = false;
+        _currentState = EnemyState.Idle;
+    }
+    
     public void TakeDamage(int damage)
     {
         _health -= damage;
@@ -112,16 +131,10 @@ public class Enemy : MonoBehaviour
             StartCoroutine(Die());
         }
     }
-
+    
     public void SetAttackSpeed(float value)
     {
         _animator.speed  = value;
-    }
-
-    public void Celebrate()
-    {
-        _isInit = false;
-        _animator.Play("Idle");
     }
 }
 
