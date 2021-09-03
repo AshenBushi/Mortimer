@@ -15,16 +15,16 @@ public class SkillPanel : UIPanel
         SkillUis = GetComponentsInChildren<SkillUI>().ToList();
     }
 
-    public override void Show()
+    public override void Show(AnimationName animationName)
     {
-        base.Show();
+        base.Show(animationName);
         Time.timeScale = 0;
         _reroll.TryEnableButton();
     }
 
-    public override void Hide()
+    public override void Hide(AnimationName animationName)
     {
-        base.Hide();
+        base.Hide(animationName);
         Time.timeScale = 1;
     }
 }

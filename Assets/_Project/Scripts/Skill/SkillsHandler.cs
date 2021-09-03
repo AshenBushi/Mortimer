@@ -44,7 +44,7 @@ public class SkillsHandler : Singleton<SkillsHandler>
 
         if (selectedSkills == null) return;
         
-        _skillPanel.Show();
+        _skillPanel.Show(AnimationName.Instantly);
 
         for (var i = 0; i < selectedSkills.Count; i++)
         {
@@ -87,7 +87,7 @@ public class SkillsHandler : Singleton<SkillsHandler>
                 break;
         }
         
-        _skillPanel.Hide();
+        _skillPanel.Hide(AnimationName.Instantly);
     }
 }
 

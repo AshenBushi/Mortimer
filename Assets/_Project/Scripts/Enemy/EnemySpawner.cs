@@ -105,7 +105,7 @@ public class EnemySpawner : MonoBehaviour
                 break;
         }
 
-        enemy.transform.position = _spawnPositions[Random.Range(0, 3)].position;
+        enemy.transform.position = _spawnPositions[Random.Range(0, _spawnPositions.Count)].position;
         
         var enemyStats = enemyType switch
         {

@@ -18,7 +18,7 @@ public class SessionManager : Singleton<SessionManager>
     public void StartSession()
     {
         _getCoins.gameObject.SetActive(false);
-        _gameScreen.Show();
+        _gameScreen.Show(AnimationName.Instantly);
         _enemySpawner.StartSession();
         _player.Init();
         SkillsHandler.Instance.Init();
@@ -27,10 +27,10 @@ public class SessionManager : Singleton<SessionManager>
 
     public void EndSession()
     {
-        _gameScreen.Hide();
+        _gameScreen.Hide(AnimationName.Instantly);
         _enemySpawner.EndSession();
         _moneyCounter.SetActive(false);
-        _loseScreen.Show();
+        _loseScreen.Show(AnimationName.Slowly);
         AudioManager.Instance.PlayMenuMusic();
     }
 }

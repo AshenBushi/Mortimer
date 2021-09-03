@@ -5,77 +5,54 @@ using UnityEngine.UI;
 
 public class Perk : MonoBehaviour
 {
-    private const int MaxLevel = 5; 
-    
+    private const int MaxLevel = 5;
+
+    [SerializeField] private Image _icon;
+    [SerializeField] private GameObject _selectEffect;
+    [Header("Description")]
+    [SerializeField] private string _name;
+    [SerializeField] private string _description;
+    [SerializeField] private string _buffPrefix;
+    [Header("Setup")]
     [SerializeField] private List<Sprite> _icons;
     [SerializeField] private List<int> _prices;
     [SerializeField] private List<float> _boosts;
 
     private Player _player;
-    private Image _icon;
-    private Button _button;
-    private Animator _animator;
+    private PerkDescription _perkDescription;
     private int _currentLevel = 0;
-    private bool _isMaxLevel = false;
 
     public float CurrentBoost => _boosts[_currentLevel];
     public int CurrentLevel => _currentLevel;
 
-    private void Awake()
-    {
-        _icon = GetComponent<Image>();
-        _button = GetComponent<Button>();
-        _animator = GetComponent<Animator>();
-    }
-
-    public void Init(Player player, int level)
+    public void Init(Player player, PerkDescription perkDescription, int level)
     {
         _currentLevel = level;
         _player = player;
+        _perkDescription = perkDescription;
         SetIcon();
-        CheckSolvency();
-        _player.OnMoneyChanged += CheckSolvency;
-    }
-
-    private void OnEnable()
-    {
-        if(_player != null)
-            _player.OnMoneyChanged += CheckSolvency;
-    }
-
-    private void OnDisable()
-    {
-        _player.OnMoneyChanged -= CheckSolvency;
-    }
-
-    private void CheckSolvency()
-    {
-        if (_currentLevel == MaxLevel)
-            _isMaxLevel = true;
-
-        if (_isMaxLevel)
-        {
-            _button.interactable = false;
-            _animator.Play("Idle");
-            return;
-        }
-
-        if (_player.Money >= _prices[_currentLevel + 1])
-        {
-            _animator.Play("PerkEnable");
-            _button.interactable = true;
-        }
-        else
-        {
-            _animator.Play("Idle");
-            _button.interactable = false;
-        }
     }
 
     private void SetIcon()
     {
         _icon.sprite = _icons[_currentLevel];
         _icon.SetNativeSize();
+        _icon.transform.position = transform.position;
+    }
+
+    public void ShowDescription()
+    {
+        var data = new PerkDescriptionData
+        {
+            Name = _name,
+            Description = _description,
+            CurrentLevel = _currentLevel,
+            CurrentBuff = _buffPrefix + _boosts[_currentLevel],
+            NextBuff = _buffPrefix + _boosts[_currentLevel + 1],
+            Price = _prices[_currentLevel + 1]
+        };
+
+        _perkDescription.ShowDescription(data, this);
     }
     
     public void Upgrade()
@@ -85,7 +62,18 @@ public class Perk : MonoBehaviour
         _player.SpendMoney(_prices[_currentLevel]);
 
         SetIcon();
+        ShowDescription();
         
         PerksHandler.Instance.SavePerks();
+    }
+
+    public void EnableSelectedEffect()
+    {
+        _selectEffect.SetActive(true);
+    }
+    
+    public void DisableSelectedEffect()
+    {
+        _selectEffect.SetActive(false);
     }
 }
