@@ -1,13 +1,23 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PerksHandler : Singleton<PerksHandler>
 {
-    [SerializeField] private List<Perk> _perks;
+    [SerializeField] private GameObject _perksContainer;
     [SerializeField] private Player _player;
     [SerializeField] private PerkDescription _perkDescription;
+
+    private List<Perk> _perks = new List<Perk>();
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        _perks = _perksContainer.GetComponentsInChildren<Perk>().ToList();
+    }
 
     private void Start()
     {

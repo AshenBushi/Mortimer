@@ -1,4 +1,5 @@
 using System;
+using Firebase.Analytics;
 using UnityEngine;
 
 public class SessionManager : Singleton<SessionManager>
@@ -23,6 +24,7 @@ public class SessionManager : Singleton<SessionManager>
         _player.Init();
         SkillsHandler.Instance.Init();
         AudioManager.Instance.PlayBattleMusic();
+        FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventLevelStart);
     }
 
     public void EndSession()
@@ -32,5 +34,7 @@ public class SessionManager : Singleton<SessionManager>
         _moneyCounter.SetActive(false);
         _loseScreen.Show(AnimationName.Slowly);
         AudioManager.Instance.PlayMenuMusic();
+        FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventLevelEnd);
+        FirebaseAnalytics.LogEvent($"waves_complete_{_enemySpawner.CurrentWave}");
     }
 }

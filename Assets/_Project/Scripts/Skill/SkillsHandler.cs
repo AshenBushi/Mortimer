@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Firebase.Analytics;
 using UnityEngine;
 using UnityEngine.Events;
 using Random = UnityEngine.Random;
@@ -8,7 +9,7 @@ using Random = UnityEngine.Random;
 public class SkillsHandler : Singleton<SkillsHandler>
 {
     [SerializeField] private Player _player;
-    [SerializeField] private PlayerAttackHandler _playerAttackHandler;
+    [SerializeField] private PlayerStateHandler _playerStateHandler;
     [SerializeField] private ExperienceBar _experienceBar;
     [SerializeField] private SkillPanel _skillPanel;
     [SerializeField] private SkillRandomizer _skillRandomizer;
@@ -86,6 +87,8 @@ public class SkillsHandler : Singleton<SkillsHandler>
                 _player.UpgradeIceAura(_skillsBuffs[(int)skillName].Buffs[level]);
                 break;
         }
+        
+        FirebaseAnalytics.LogEvent($"skill_upgraded_{skillName}");
         
         _skillPanel.Hide(AnimationName.Instantly);
     }

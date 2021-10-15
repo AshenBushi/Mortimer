@@ -35,7 +35,7 @@ public class AdManager : Singleton<AdManager>
     private void InitializeRewarded()
     {
 #if UNITY_ANDROID
-        const string rewardId = "ca-app-pub-8536869637526391/5119424843"; 
+        const string rewardId = "ca-app-pub-7550009529102534/2952296627"; 
 #elif UNITY_IPHONE
         const string rewardId = "";
 #else
@@ -54,7 +54,7 @@ public class AdManager : Singleton<AdManager>
     private void InitializeInterstitial()
     {
 #if UNITY_ANDROID
-        const string interstitialId = "ca-app-pub-8536869637526391/1180179839";
+        const string interstitialId = "ca-app-pub-7550009529102534/2269770344";
 #elif UNITY_IPHONE
         const string interstitialId = "";
 #else

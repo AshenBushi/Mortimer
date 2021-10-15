@@ -23,6 +23,8 @@ public class EnemySpawner : MonoBehaviour
     private float _timeSpend;
     private bool _inSession = false;
 
+    public int CurrentWave => _currentWave;
+
     public event UnityAction<Enemy> OnEnemyKilled;
     public event UnityAction<int, int> OnEnemySpawned;
 

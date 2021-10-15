@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ namespace GoogleMobileAds.Editor
         private static GoogleMobileAdsSettings instance;
 
         [SerializeField]
-        private string adMobAndroidAppId = "ca-app-pub-8536869637526391~4997163582";
+        private string adMobAndroidAppId = string.Empty; //ca-app-pub-7550009529102534~3236557022
 
         [SerializeField]
         private string adMobIOSAppId = string.Empty;

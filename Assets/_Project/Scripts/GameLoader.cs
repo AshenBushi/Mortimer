@@ -17,6 +17,9 @@ public class GameLoader : MonoBehaviour
         _operation.allowSceneActivation = false;
 
         yield return new WaitForSeconds(1f);
+        yield return new WaitUntil(() => DataManager.Instance.IsLoaded);
+        
+        Debug.Log(DataManager.Instance.IsLoaded);
 
         _operation.allowSceneActivation = true;
     }

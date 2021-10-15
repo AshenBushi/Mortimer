@@ -3,15 +3,15 @@ using UnityEngine.EventSystems;
 
 public class AttackField : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
-    [SerializeField] private PlayerAttackHandler _playerAttackHandler;
+    [SerializeField] private PlayerStateHandler _playerStateHandler;
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        _playerAttackHandler.ToAttack();
+        _playerStateHandler.ToAttack();
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        _playerAttackHandler.ToIdle();
+        _playerStateHandler.ToIdle();
     }
 }

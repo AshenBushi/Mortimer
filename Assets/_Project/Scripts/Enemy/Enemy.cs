@@ -12,13 +12,14 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float _speed;
     [SerializeField] private int _moneyReward;
     [SerializeField] private int _experienceReward;
+    [SerializeField] private EnemyBar _enemyBar;
     
     private Player _target;
     private Animator _animator;
     private EnemyState _currentState;
     private bool _isInit;
     private float _attackSpeed;
-
+    
     public int Damage => _damage;
     public int MoneyReward => _moneyReward;
     public int ExperienceReward => _experienceReward;
@@ -42,6 +43,9 @@ public class Enemy : MonoBehaviour
         _experienceReward = stats.Experience;
         _isInit = true;
         _attackSpeed = 1f;
+        
+        _enemyBar.gameObject.SetActive(true);
+        _enemyBar.SetValue(_health, _health);
     }
     
     private void Update()
@@ -125,11 +129,13 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int damage)
     {
         _health -= damage;
+        
+        _enemyBar.ChangeValue(_health);
 
-        if (_health <= 0)
-        {
-            StartCoroutine(Die());
-        }
+        if (_health > 0) return;
+        
+        _enemyBar.gameObject.SetActive(false);
+        StartCoroutine(Die());
     }
     
     public void SetAttackSpeed(float value)

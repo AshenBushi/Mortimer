@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Firebase.Analytics;
 using GoogleMobileAds.Api;
 using UnityEngine;
 
@@ -9,5 +10,6 @@ public class Reroll : AdButton
     {
         base.HandleUserEarnReward(sender, e);
         SkillsHandler.Instance.GiveRandomSkills();
+        FirebaseAnalytics.LogEvent("ad_reroll_skills");
     }
 }
