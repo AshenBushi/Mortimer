@@ -1,4 +1,5 @@
 using System;
+using Firebase.Analytics;
 using UnityEngine;
 
 public class SessionManager : Singleton<SessionManager>
@@ -18,19 +19,22 @@ public class SessionManager : Singleton<SessionManager>
     public void StartSession()
     {
         _getCoins.gameObject.SetActive(false);
-        _gameScreen.Show();
+        _gameScreen.Show(AnimationName.Instantly);
         _enemySpawner.StartSession();
         _player.Init();
         SkillsHandler.Instance.Init();
         AudioManager.Instance.PlayBattleMusic();
+        FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventLevelStart);
     }
 
     public void EndSession()
     {
-        _gameScreen.Hide();
+        _gameScreen.Hide(AnimationName.Instantly);
         _enemySpawner.EndSession();
         _moneyCounter.SetActive(false);
-        _loseScreen.Show();
+        _loseScreen.Show(AnimationName.Slowly);
         AudioManager.Instance.PlayMenuMusic();
+        FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventLevelEnd);
+        FirebaseAnalytics.LogEvent($"waves_complete_{_enemySpawner.CurrentWave}");
     }
 }

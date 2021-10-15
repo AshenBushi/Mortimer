@@ -1,12 +1,19 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using Firebase.Analytics;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class DataManager : Singleton<DataManager>
 {
+    private string _path;
+
     public Data Data;
 
+    public bool IsLoaded { get; private set; } = false;
+    
     protected override void Awake()
     {
         if (Instance == null)
@@ -22,6 +29,27 @@ public class DataManager : Singleton<DataManager>
         Load();
     }
 
+    private void Load()
+    {
+#if UNITY_ANDROID && !UNITY_EDITOR
+        _path = Path.Combine(Application.persistentDataPath, "GameData.json");
+#else
+        _path = Path.Combine(Application.dataPath, "GameData.json");
+#endif
+
+        if (File.Exists(_path))
+        {
+            Data = JsonUtility.FromJson<Data>(File.ReadAllText(_path));
+        }
+        else
+        {
+            FirstPlay();
+            Save();
+        }
+
+        IsLoaded = true;
+    }
+
 #if UNITY_ANDROID && !UNITY_EDITOR
     private void OnApplicationPause(bool pause)
     {
@@ -33,14 +61,22 @@ public class DataManager : Singleton<DataManager>
         Save();
     }
     
-    private void Load()
+    private void FirstPlay()
     {
-        Data = PlayerPrefs.HasKey("Data") ? JsonUtility.FromJson<Data>(PlayerPrefs.GetString("Data")) : new Data();
+        Data = new Data();
+        StartCoroutine(SendEvent());
     }
 
+    private IEnumerator SendEvent()
+    {
+        yield return new WaitForSeconds(.5f);
+        
+        FirebaseAnalytics.LogEvent("first_open");
+    }
+    
     public void Save()
     {
-        PlayerPrefs.SetString("Data", JsonUtility.ToJson(Data));
+        File.WriteAllText(_path, JsonUtility.ToJson(Data));
     }
 }
 

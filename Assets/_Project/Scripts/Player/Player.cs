@@ -22,20 +22,17 @@ public class Player : MonoBehaviour
     [Space]
     [SerializeField] private PlayerStats _playerStats;
 
-    private PlayerAttackHandler _playerAttackHandler;
+    private PlayerStateHandler _playerStateHandler;
     private Animator _animator;
     
-    public int Money { get; private set; }
     public PlayerStats PlayerStats => _playerStats;
     public event UnityAction OnHealthChanged;
-    public event UnityAction OnMoneyChanged;
 
     private void Awake()
     {
-        _playerAttackHandler = GetComponent<PlayerAttackHandler>();
+        _playerStateHandler = GetComponent<PlayerStateHandler>();
         _ultimateDefense = GetComponentInChildren<UltimateDefense>();
         _animator = GetComponent<Animator>();
-        SetMoney();
     }
     
     public void Init()
@@ -54,43 +51,23 @@ public class Player : MonoBehaviour
     private void OnDisable()
     {
         _enemySpawner.OnEnemyKilled -= OnEnemyKilled;
-        DataManager.Instance.Data.Money = Money;
-        DataManager.Instance.Save();
     }
-    
+
     private void Die()
     {
         _animator.SetTrigger("Died");
-        _playerAttackHandler.Die();
+        _playerStateHandler.Die();
         SessionManager.Instance.EndSession();
     }
     
     private void OnEnemyKilled(Enemy enemy)
     {
-        AddMoney((int)(enemy.MoneyReward * PerksHandler.Instance.GetPerkBoost(PerkName.Income)));
-    }
-    
-    private void SetMoney()
-    {
-        Money = DataManager.Instance.Data.Money;
-        OnMoneyChanged?.Invoke();
-    }
-    
-    public void AddMoney(int value)
-    {
-        Money += value;
-        OnMoneyChanged?.Invoke();
-    }
-    
-    public void SpendMoney(int value)
-    {
-        Money -= value;
-        OnMoneyChanged?.Invoke();
+        Wallet.Instance.AddMoney((int)(enemy.MoneyReward * PerksHandler.Instance.GetPerkBoost(PerkName.Income)));
     }
 
     public void TakeDamage(int damage)
     {
-        if(_ultimateDefense.IsUltimateShield) return;
+        if(_ultimateDefense.IsUltimateShield || _playerStateHandler.IsBlocking) return;
 
         if (_playerStats.DodgeChance > 0)
         {

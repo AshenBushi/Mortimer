@@ -7,6 +7,6 @@ public class StartScreen : UIPanel
     public void Fight()
     {
         _sessionManager.StartSession();
-        Hide();
+        Hide(AnimationName.Instantly);
     }
 }

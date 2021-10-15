@@ -1,10 +1,12 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class ExperienceBar : Bar
 {
     [SerializeField] private EnemySpawner _enemySpawner;
+    [SerializeField] private TMP_Text _level;
 
     private int _experienceToLevel;
     private int _currentExperience = 0;
@@ -44,6 +46,7 @@ public class ExperienceBar : Bar
     private void UpdateBar()
     {
         _experienceToLevel = _currentLevel * 100;
+        _level.text = _currentLevel.ToString();
         SetBarValue(_experienceToLevel, _currentExperience);
     }
 }

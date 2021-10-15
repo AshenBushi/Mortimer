@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:keep="@string/gcm_defaultSenderId,@string/google_storage_bucket,@string/project_id,@string/google_api_key,@string/google_crash_reporting_api_key,@string/google_app_id,@string/default_web_client_id">
+  <string name="gcm_defaultSenderId" translatable="false">795536285820</string>
+  <string name="google_storage_bucket" translatable="false">mortimer-a8362.appspot.com</string>
+  <string name="project_id" translatable="false">mortimer-a8362</string>
+  <string name="google_api_key" translatable="false">AIzaSyA72Xx_HU-EjB2gbqvyzlcvk7Nu9R7m1tA</string>
+  <string name="google_crash_reporting_api_key" translatable="false">AIzaSyA72Xx_HU-EjB2gbqvyzlcvk7Nu9R7m1tA</string>
+  <string name="google_app_id" translatable="false">1:795536285820:android:df8673ccb008d3ae6669f9</string>
+  <string name="default_web_client_id" translatable="false">795536285820-1p8dm6mpfgdpdhv4mvm5250vo4rli4kr.apps.googleusercontent.com</string>
+</resources>
