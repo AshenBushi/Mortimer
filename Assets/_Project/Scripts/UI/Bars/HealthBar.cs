@@ -26,11 +26,11 @@ public class HealthBar : Bar
         SetBarValue(_target.PlayerStats.MaxHealth, _target.PlayerStats.Health);
     }
 
-    protected override void ChangeBarValue(int value)
+    /*protected override void ChangeBarValue(int value)
     {
         base.ChangeBarValue(value);
         _text.text = value.ToString();
-    }
+    }*/
 
     protected override void SetBarValue(int maxValue, int currentValue)
     {

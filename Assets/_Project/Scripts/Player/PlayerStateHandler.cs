@@ -15,6 +15,7 @@ public class PlayerStateHandler : MonoBehaviour
     [SerializeField] private float _stonePeaksAnimationDuration;
     
     private Player _player;
+    private Stamina _stamina;
     private Animator _animator;
     private DoubleDamage _doubleDamage;
     private PlayerState _currentPlayerState;
@@ -33,6 +34,7 @@ public class PlayerStateHandler : MonoBehaviour
     private void Awake()
     {
         _player = GetComponent<Player>();
+        _stamina = GetComponent<Stamina>();
         _animator = GetComponent<Animator>();
         _doubleDamage = GetComponentInChildren<DoubleDamage>();
         _audioSource = GetComponent<AudioSource>();
@@ -136,6 +138,7 @@ public class PlayerStateHandler : MonoBehaviour
 
     public void ToBlock()
     {
+        if(_stamina.StaminaCount <= 0) return;
         _currentPlayerState = PlayerState.Block;
     }
 

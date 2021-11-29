@@ -23,6 +23,7 @@ public class Player : MonoBehaviour
     [SerializeField] private PlayerStats _playerStats;
 
     private PlayerStateHandler _playerStateHandler;
+    private Stamina _stamina;
     private Animator _animator;
     
     public PlayerStats PlayerStats => _playerStats;
@@ -31,6 +32,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         _playerStateHandler = GetComponent<PlayerStateHandler>();
+        _stamina = GetComponent<Stamina>();
         _ultimateDefense = GetComponentInChildren<UltimateDefense>();
         _animator = GetComponent<Animator>();
     }
@@ -67,7 +69,13 @@ public class Player : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        if(_ultimateDefense.IsUltimateShield || _playerStateHandler.IsBlocking) return;
+        if(_ultimateDefense.IsUltimateShield) return;
+
+        if (_playerStateHandler.IsBlocking)
+        {
+            _stamina.SpendStamina(30);
+            return;
+        }
 
         if (_playerStats.DodgeChance > 0)
         {

@@ -594,6 +594,7 @@ GameObject:
   - component: {fileID: 3757360678201208635}
   - component: {fileID: 5304154407521308849}
   - component: {fileID: 7813127931966004510}
+  - component: {fileID: 7243279996779545309}
   - component: {fileID: 1603972467176472275}
   m_Layer: 0
   m_Name: Player
@@ -824,6 +825,20 @@ MonoBehaviour:
   - 1.2
   _timingForStonePeaks: 0.55
   _stonePeaksAnimationDuration: 1.36
+--- !u!114 &7243279996779545309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5304154407521308848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3228ea1972ab39468da87d73a99d680, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxStaminaCount: 100
+  _defaultRegeneratePerSecond: 20
 --- !u!114 &1603972467176472275
 MonoBehaviour:
   m_ObjectHideFlags: 0

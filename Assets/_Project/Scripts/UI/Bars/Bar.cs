@@ -27,7 +27,7 @@ public class Bar : MonoBehaviour
         }
     }
 
-    protected virtual void ChangeBarValue(int value)
+    protected void ChangeBarValue(int value)
     {
         _currentValue = value;
 
