@@ -19,6 +19,7 @@ public class Enemy : MonoBehaviour
     private EnemyState _currentState;
     private bool _isInit;
     private float _attackSpeed;
+    private bool _isStunning;
     
     public int Damage => _damage;
     public int MoneyReward => _moneyReward;
@@ -50,6 +51,8 @@ public class Enemy : MonoBehaviour
     
     private void Update()
     {
+        if(_isStunning) return;
+        
         SelectState();
         CheckState();
     }
@@ -136,6 +139,30 @@ public class Enemy : MonoBehaviour
         
         _enemyBar.gameObject.SetActive(false);
         StartCoroutine(Die());
+    }
+    
+    public IEnumerator TakeDamageWithStunLock(int damage)
+    {
+        _health -= damage;
+        
+        _enemyBar.ChangeValue(_health);
+        
+        if (_health > 0)
+        {
+            _animator.Play("TakeDamage");
+
+            _isStunning = true;
+
+            yield return new WaitForSeconds(0.5f);
+
+            _isStunning = false;
+        }
+        else
+        {
+            _enemyBar.gameObject.SetActive(false);
+            
+            StartCoroutine(Die());
+        }
     }
     
     public void SetAttackSpeed(float value)

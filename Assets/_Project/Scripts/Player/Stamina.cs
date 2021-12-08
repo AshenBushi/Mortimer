@@ -5,48 +5,46 @@ using UnityEngine.Events;
 public class Stamina : MonoBehaviour
 {
     [SerializeField] private int _maxStaminaCount;
-    [SerializeField] private int _defaultRegeneratePerSecond;
+    [SerializeField] private int _regeneratePerSecond;
 
-    private PlayerStateHandler _playerStateHandler;
+    private PlayerStateMachine _playerStateMachine;
     private float _timer = 0;
-    private int _staminaCount;
-    private int _regeneratePerSecond;
+    private float _staminaCount;
     private bool _canRegenerate = true;
 
-    private bool IsPlayerBlocking => _playerStateHandler.IsBlocking;
-
     public int MaxStaminaCount => _maxStaminaCount;
-    public int StaminaCount => _staminaCount;
-    
+    public float StaminaCount => _staminaCount;
     public event UnityAction OnStaminaChanged;
 
     private void Awake()
     {
-        _playerStateHandler = GetComponent<PlayerStateHandler>();
-        
-        Init();
+        _playerStateMachine = GetComponent<PlayerStateMachine>();
     }
 
-    private void Init()
+    public void Init()
     {
+        _maxStaminaCount += (int)PerksHandler.Instance.GetPerkBoost(PerkName.Stamina);
         _staminaCount = _maxStaminaCount;
-        _regeneratePerSecond = _defaultRegeneratePerSecond;
     }
     
     private void Update()
     {
         if (!_canRegenerate || _staminaCount == _maxStaminaCount) return;
+        
         _timer += Time.deltaTime;
 
         if (_timer < 1) return;
-        RegenerateStamina();
+        
+        if(_playerStateMachine.IsBlocking)
+            SpendStamina(1);
+        else
+            RegenerateStamina();
+        
         _timer = 0;
     }
 
     private void RegenerateStamina()
     {
-        _regeneratePerSecond = IsPlayerBlocking ? _defaultRegeneratePerSecond / 2 : _defaultRegeneratePerSecond;
-
         if (_staminaCount + _regeneratePerSecond > _maxStaminaCount)
             _staminaCount = _maxStaminaCount;
         else
@@ -64,14 +62,14 @@ public class Stamina : MonoBehaviour
         _canRegenerate = true;
     }
     
-    public void SpendStamina(int value)
+    public void SpendStamina(float value)
     {
         _staminaCount -= value;
 
         if (_staminaCount <= 0)
         {
             _staminaCount = 0;
-            _playerStateHandler.ToIdle();
+            _playerStateMachine.ToIdle();
             StartCoroutine(StopRegenerate());
         }
         

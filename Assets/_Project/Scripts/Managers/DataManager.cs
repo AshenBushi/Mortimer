@@ -89,6 +89,6 @@ public class Data
     public Data()
     {
         Money = 0;
-        PerksLevels = new List<int>() { 0, 0, 0, 0, 0 };
+        PerksLevels = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
     }
 }

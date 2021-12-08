@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "795536285820",
-    "project_id": "mortimer-a8362",
-    "storage_bucket": "mortimer-a8362.appspot.com"
+    "project_number": "315629991365",
+    "project_id": "mortimer-last-knight",
+    "storage_bucket": "mortimer-last-knight.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:795536285820:android:df8673ccb008d3ae6669f9",
+        "mobilesdk_app_id": "1:315629991365:android:37469e0e57ee3592a047ac",
         "android_client_info": {
           "package_name": "com.ArtGaming.MortimerLastKnight"
         }
       },
       "oauth_client": [
         {
-          "client_id": "795536285820-1p8dm6mpfgdpdhv4mvm5250vo4rli4kr.apps.googleusercontent.com",
+          "client_id": "315629991365-bokcjdd42sv2rlioq4e628hdrnda6qqn.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA72Xx_HU-EjB2gbqvyzlcvk7Nu9R7m1tA"
+          "current_key": "AIzaSyBOLdwgtAAR7Ak2zxQq4vn2Rjtzf_27yRQ"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "795536285820-1p8dm6mpfgdpdhv4mvm5250vo4rli4kr.apps.googleusercontent.com",
+              "client_id": "315629991365-bokcjdd42sv2rlioq4e628hdrnda6qqn.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

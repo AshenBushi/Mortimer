@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
 using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(Animator))]
@@ -22,16 +23,17 @@ public class Player : MonoBehaviour
     [Space]
     [SerializeField] private PlayerStats _playerStats;
 
-    private PlayerStateHandler _playerStateHandler;
+    private PlayerStateMachine _playerStateMachine;
     private Stamina _stamina;
     private Animator _animator;
+    private float _timer;
     
     public PlayerStats PlayerStats => _playerStats;
     public event UnityAction OnHealthChanged;
 
     private void Awake()
     {
-        _playerStateHandler = GetComponent<PlayerStateHandler>();
+        _playerStateMachine = GetComponent<PlayerStateMachine>();
         _stamina = GetComponent<Stamina>();
         _ultimateDefense = GetComponentInChildren<UltimateDefense>();
         _animator = GetComponent<Animator>();
@@ -40,7 +42,9 @@ public class Player : MonoBehaviour
     public void Init()
     {
         _playerStats = new PlayerStats(DefaultMaxHealth * PerksHandler.Instance.GetPerkBoost(PerkName.Health),
-            DefaultDamage * PerksHandler.Instance.GetPerkBoost(PerkName.Damage));
+            DefaultDamage * PerksHandler.Instance.GetPerkBoost(PerkName.Damage), PerksHandler.Instance.GetPerkBoost(PerkName.Dodge));
+        
+        _stamina.Init();
         
         OnHealthChanged?.Invoke();
     }
@@ -55,10 +59,24 @@ public class Player : MonoBehaviour
         _enemySpawner.OnEnemyKilled -= OnEnemyKilled;
     }
 
+    private void Update()
+    {
+        _timer += Time.deltaTime;
+
+        if (!(_timer >= 1)) return;
+        
+        if (_playerStats.Health < _playerStats.MaxHealth * 0.35f)
+        {
+            _playerStats.Health += _playerStats.RegenerationPerSec;
+        }
+
+        _timer = 0;
+    }
+
     private void Die()
     {
         _animator.SetTrigger("Died");
-        _playerStateHandler.Die();
+        _playerStateMachine.Die();
         SessionManager.Instance.EndSession();
     }
     
@@ -71,7 +89,7 @@ public class Player : MonoBehaviour
     {
         if(_ultimateDefense.IsUltimateShield) return;
 
-        if (_playerStateHandler.IsBlocking)
+        if (_playerStateMachine.IsBlocking)
         {
             _stamina.SpendStamina(30);
             return;
@@ -83,8 +101,10 @@ public class Player : MonoBehaviour
             
             if(randomValue <= _playerStats.DodgeChance) return;
         }
+
+        var damageResist = _playerStats.Health < _playerStats.MaxHealth * 0.20f ? _playerStats.DamageResist : 0;
         
-        _playerStats.Health -= damage;
+        _playerStats.Health -= damage * (1 - damageResist);
 
         OnHealthChanged?.Invoke();
 
@@ -114,7 +134,7 @@ public class Player : MonoBehaviour
     
     public void SetDodgeChance(int value)
     {
-        _playerStats.DodgeChance = value;
+        _playerStats.DodgeChance = (int)PerksHandler.Instance.GetPerkBoost(PerkName.Dodge) + value;
     }
     
     public void UpgradeStonePeaks(int value)
@@ -123,6 +143,11 @@ public class Player : MonoBehaviour
             _activeSkills[0].Enable();
         
         _activeSkills[0].SetCooldown(value);
+    }
+
+    public void UpgradeIronWill(int value)
+    {
+        _playerStats.RegenerationPerSec = value;
     }
     
     public void UpgradeUltimateDefense(int value)
@@ -140,6 +165,11 @@ public class Player : MonoBehaviour
         
         _doubleDamage.SetDuration(value);
     }
+
+    public void UpgradeRage(int value)
+    {
+        _playerStats.AdditionalDamage = value;
+    }
     
     public void UpgradeFireAura(int value)
     {
@@ -154,6 +184,11 @@ public class Player : MonoBehaviour
             _iceAura.gameObject.SetActive(true);
         _iceAura.SetFreezePower(value);
     }
+
+    public void UpgradeFortitude(int value)
+    {
+        _playerStats.DamageResist = value;
+    }
 }
 
 [Serializable]
@@ -162,15 +197,21 @@ public struct PlayerStats
     public int MaxHealth;
     public int Health;
     public int Damage;
+    public int AdditionalDamage;
     public float AttackSpeed;
     public int DodgeChance;
+    public int RegenerationPerSec;
+    public int DamageResist;
 
-    public PlayerStats(float maxHealth, float damage)
+    public PlayerStats(float maxHealth, float damage, float dodgeChance)
     {
         MaxHealth = (int)maxHealth;
         Health = MaxHealth;
         Damage = (int)damage;
+        AdditionalDamage = 0;
         AttackSpeed = 1;
-        DodgeChance = 0;
+        DodgeChance = (int)dodgeChance;
+        RegenerationPerSec = 1;
+        DamageResist = 0;
     }
 }

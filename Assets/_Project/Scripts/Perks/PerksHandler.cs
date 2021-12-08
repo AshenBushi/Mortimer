@@ -65,5 +65,8 @@ public enum PerkName
     Damage,
     Veteran,
     Luck,
-    Income
+    Income,
+    Stamina,
+    Shield,
+    Dodge
 }

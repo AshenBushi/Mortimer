@@ -14,6 +14,7 @@ public class Perk : MonoBehaviour
     [SerializeField] private string _name;
     [SerializeField] private string _description;
     [SerializeField] private string _buffPrefix;
+    [SerializeField] private string _buffPostfix;
     [Header("Setup")] 
     [SerializeField] private Sprite _defaultIcon;
     [SerializeField] private List<Sprite> _icons;
@@ -84,8 +85,8 @@ public class Perk : MonoBehaviour
                 Name = _name,
                 Description = _description,
                 CurrentLevel = _currentLevel,
-                CurrentBuff = _buffPrefix + _boosts[_currentLevel],
-                NextBuff = _buffPrefix + _boosts[_currentLevel + 1],
+                CurrentBuff = _buffPrefix + _boosts[_currentLevel] + _buffPostfix,
+                NextBuff = _buffPrefix + _boosts[_currentLevel + 1] + _buffPostfix,
                 Price = _prices[_currentLevel + 1]
             };
 
@@ -98,8 +99,8 @@ public class Perk : MonoBehaviour
                 Name = _name,
                 Description = _description,
                 CurrentLevel = _currentLevel,
-                CurrentBuff = _buffPrefix + _boosts[_currentLevel],
-                NextBuff = _buffPrefix + _boosts[_currentLevel],
+                CurrentBuff = _buffPrefix + _boosts[_currentLevel] + _buffPostfix,
+                NextBuff = _buffPrefix + _boosts[_currentLevel] + _buffPostfix,
                 Price = _prices[_currentLevel]
             };
 

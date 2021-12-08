@@ -22,6 +22,6 @@ public class StaminaBar : Bar
 
     private void OnStaminaChanged()
     {
-        ChangeBarValue(_stamina.StaminaCount);
+        ChangeBarValue((int)_stamina.StaminaCount);
     }
 }

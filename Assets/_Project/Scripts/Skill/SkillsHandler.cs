@@ -9,7 +9,7 @@ using Random = UnityEngine.Random;
 public class SkillsHandler : Singleton<SkillsHandler>
 {
     [SerializeField] private Player _player;
-    [SerializeField] private PlayerStateHandler _playerStateHandler;
+    [SerializeField] private PlayerStateMachine _playerStateMachine;
     [SerializeField] private ExperienceBar _experienceBar;
     [SerializeField] private SkillPanel _skillPanel;
     [SerializeField] private SkillRandomizer _skillRandomizer;
@@ -71,6 +71,9 @@ public class SkillsHandler : Singleton<SkillsHandler>
             case SkillName.StonePeaks:
                 _player.UpgradeStonePeaks((int)_skillsBuffs[(int)skillName].Buffs[level]);
                 break;
+            case SkillName.IronWill:
+                _player.UpgradeIronWill((int)_skillsBuffs[(int)skillName].Buffs[level]);
+                break;
             case SkillName.Dodge:
                 _player.SetDodgeChance((int)_skillsBuffs[(int)skillName].Buffs[level]);
                 break;
@@ -80,11 +83,17 @@ public class SkillsHandler : Singleton<SkillsHandler>
             case SkillName.UltimateShield:
                 _player.UpgradeUltimateDefense((int)_skillsBuffs[(int)skillName].Buffs[level]);
                 break;
+            case SkillName.Rage:
+                _player.UpgradeRage((int)_skillsBuffs[(int)skillName].Buffs[level]);
+                break;
             case SkillName.FireAura:
                 _player.UpgradeFireAura((int)_skillsBuffs[(int)skillName].Buffs[level]);
                 break;
             case SkillName.FreezingSkin:
                 _player.UpgradeIceAura(_skillsBuffs[(int)skillName].Buffs[level]);
+                break;
+            case SkillName.Fortitude:
+                _player.UpgradeFortitude((int)_skillsBuffs[(int)skillName].Buffs[level]);
                 break;
         }
         
@@ -102,11 +111,14 @@ public enum SkillName
     SwordMaster,
     AttackSpeed,
     StonePeaks,
+    IronWill,
     Dodge,
     DoubleDamage,
     UltimateShield,
+    Rage,
     FireAura,
-    FreezingSkin
+    FreezingSkin,
+    Fortitude
 }
 
 [Serializable]

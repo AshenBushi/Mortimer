@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using TMPro;
@@ -8,8 +9,8 @@ public class SkillUI : MonoBehaviour
 {
     [Header("Presets")]
     [SerializeField] private List<string> _rarities;
-    [SerializeField] private List<Sprite> _icons;
     [SerializeField] private List<Sprite> _buttonBackgrounds;
+    [SerializeField] private List<Sprite> _icons;
     [SerializeField] private List<string> _descriptions;
     [Space]
     [SerializeField] private TMP_Text _rarity;
@@ -36,11 +37,14 @@ public class SkillUI : MonoBehaviour
             SkillName.SwordMaster => $"+{buff}",
             SkillName.AttackSpeed => $"{(buff - 1) * 100}%",
             SkillName.StonePeaks => $"Cooldown: {buff} sec",
+            SkillName.IronWill => $"{buff} HP per sec",
             SkillName.Dodge => $"{buff}%",
             SkillName.DoubleDamage => $"Duration: {buff} sec",
             SkillName.UltimateShield => $"Duration: {buff} sec",
+            SkillName.Rage => $"{buff}",
             SkillName.FireAura => $"{buff} per sec",
             SkillName.FreezingSkin => $"{buff * 100}%",
+            SkillName.Fortitude => $"{buff * 100}%",
             _ => _buff.text
         };
 
